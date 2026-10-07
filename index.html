@@ -377,6 +377,11 @@
   .g-obs{float:right;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:4px}
   .g.vac{background:var(--danger-bg);border-color:var(--danger-line);border-left-color:var(--danger);border-style:dashed;border-left-style:solid}
   .g.vac .g-nom{color:var(--danger);font-weight:800;letter-spacing:.3px}
+  /* sale de una guardia fija (↻); naranja si la cubre un reemplazo del titular */
+  .g-fija{font-style:normal;margin-left:auto;font-size:11px;font-weight:800;color:var(--muted);line-height:1}
+  .g-nota{display:block;font-size:10px;font-weight:700;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .g.reemp{background:var(--warn-bg);border-color:color-mix(in srgb,var(--accent) 35%,transparent);border-left-color:var(--accent)}
+  .g.vac .g-nota{color:var(--danger);opacity:.8}
 
   /* ===== Celular: tira de días y lista por base ===== */
   .dias-cel{display:none}
@@ -527,6 +532,64 @@
     .lineas-cards{grid-template-columns:1fr 1fr}
   }
 
+  /* ===== Guardias fijas: esquema semanal por base ===== */
+  .base-esquema{margin:0 0 10px}
+  .base-esquema .panel-cab h3{display:flex;align-items:center;gap:7px}
+  .esquema-wrap{overflow-x:auto}
+  .esquema{border-collapse:separate;border-spacing:0;width:100%;min-width:640px;table-layout:fixed}
+  .esquema th,.esquema td{border-bottom:1px solid var(--line);padding:4px;vertical-align:top}
+  .esquema thead th{font-size:11px;color:var(--muted);font-weight:800;text-align:center;background:var(--soft);padding:5px 4px}
+  .esquema thead th:first-child{text-align:left;width:118px;border-radius:8px 0 0 0}
+  .esquema thead th:last-child{border-radius:0 8px 0 0}
+  .esquema tbody th{text-align:left;font-size:12px;font-weight:800;white-space:nowrap}
+  .esquema tbody tr:last-child th,.esquema tbody tr:last-child td{border-bottom:0}
+  .esquema td{text-align:center}
+  .fx{display:block;width:100%;border:1px solid var(--ok-line);background:var(--ok-bg);color:var(--ink);border-radius:7px;padding:4px 3px;font-size:11.5px;font-weight:700;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fx + .fx{margin-top:3px}
+  .fx:hover{filter:brightness(.96)}
+  .fx.vac{background:var(--danger-bg);border:1px dashed var(--danger-line);color:var(--danger)}
+  .fx.lic{background:var(--warn-bg);border-color:color-mix(in srgb,var(--accent) 35%,transparent);color:var(--warn)}
+  .fx.tenue{opacity:.35}
+  .fx.match{outline:2px solid var(--accent);outline-offset:1px}
+  .fx-mas{width:100%;border:1.5px dashed var(--line);background:transparent;border-radius:7px;color:var(--muted);font-weight:800;padding:3px;cursor:pointer}
+  .fx-mas:hover{border-color:var(--brand);color:var(--brand-txt)}
+  .fx-nada{color:var(--muted)}
+
+  /* ===== Ventana de guardia fija: días de la semana ===== */
+  .dias-sel{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .dias-sel button{border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;cursor:pointer;color:var(--ink)}
+  .dias-sel button b{font-size:15px;line-height:1.1}
+  .dias-sel button small{font-size:10px;color:var(--muted);font-weight:700}
+  .dias-sel button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+  .dias-sel button[aria-pressed="true"] small{color:#cfe0f5}
+  .dias-sel.bloqueado,.ayuda.bloqueado{pointer-events:none;opacity:.7}
+
+  /* ===== Ventana de guardia: aviso de guardia fija ===== */
+  .info-fija{display:flex;flex-wrap:wrap;align-items:center;gap:3px 8px;margin:0 0 12px;padding:8px 11px;border-radius:10px;font-size:12.5px;
+    background:color-mix(in srgb,var(--brand) 8%,var(--card));border:1px solid color-mix(in srgb,var(--brand) 22%,transparent)}
+  .info-fija small{color:var(--muted);font-weight:700}
+  .info-fija span{flex-basis:100%;color:var(--muted)}
+  .info-fija .btn{margin-left:auto}
+
+  /* ===== Ficha de la persona: su semana fija y licencias ===== */
+  .ficha-esquema{border-top:1px solid var(--line);margin-top:4px;padding-top:10px}
+  .fe-cab{display:flex;align-items:center;gap:8px;margin:4px 0 6px}
+  .fe-cab small{color:var(--muted);font-weight:700;font-size:11.5px}
+  .fe-cab .btn{margin-left:auto}
+  .semana-mini{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:0 0 8px}
+  .semana-mini span{border:1px solid var(--line);border-radius:8px;padding:4px 2px;text-align:center;background:var(--soft);min-width:0}
+  .semana-mini span.on{background:var(--ok-bg);border-color:var(--ok-line)}
+  .semana-mini b{display:block;font-size:11px}
+  .semana-mini small{display:block;font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap}
+  .fe-fila{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:6px 10px;margin:0 0 5px;cursor:pointer;color:var(--ink)}
+  .fe-fila b{font-size:13px}
+  .fe-fila small{color:var(--muted);font-size:11.5px}
+  .fe-fila.lic{cursor:default;background:var(--warn-bg);border-color:transparent}
+  .fe-fila .link{margin-left:auto;font-size:12px}
+  .esquema tbody th,.esquema thead th:first-child{position:sticky;left:0;z-index:1;background:var(--card)}
+  .esquema thead th:first-child{background:var(--soft)}
+  @media (max-width:640px){.esquema{min-width:560px}.esquema thead th:first-child{width:96px}}
+
 </style>
 </head>
 <body class="cargando">
@@ -540,6 +603,7 @@
   <nav class="nav" id="nav" aria-label="Secciones">
     <button type="button" data-vista="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Inicio</span></button>
     <button type="button" data-vista="guardias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M8 14h3"/><path d="M13 17h3"/></svg><span>Guardias</span><em class="cnt" id="nav-vac" title="Vacantes de hoy y mañana"></em></button>
+    <button type="button" data-vista="fijas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg><span>Guardias fijas</span></button>
     <button type="button" data-vista="personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 5a3.5 3.5 0 0 1 0 7"/><path d="M22 20a6 6 0 0 0-4-5.6"/></svg><span>Personal</span></button>
     <div class="nav-sec" id="nav-sec">Administración</div>
     <button type="button" data-vista="bases" data-permiso="editarBases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Líneas y bases</span></button>
@@ -587,7 +651,7 @@
         <button class="btn primario ancho" id="lc-ok" type="button">Guardar PIN y entrar</button>
         <p class="ayuda centro"><button class="link" id="lc-volver" type="button">Volver</button></p>
       </div>
-      <p class="ayuda centro login-pie">Versión 2026-10-07 c</p>
+      <p class="ayuda centro login-pie">Versión 2026-10-07 d</p>
     </div>
   </section>
 
@@ -617,6 +681,7 @@
       <div class="panel"><div class="panel-cab"><h3>Por tipo de personal</h3></div><div id="ini-tipos"></div></div>
       <div class="panel"><div class="panel-cab"><h3>Bases con más vacantes</h3></div><div id="ini-bases"></div></div>
       <div class="panel"><div class="panel-cab"><h3>Cobertura día por día</h3></div><div id="ini-dias"></div></div>
+      <div class="panel"><div class="panel-cab"><h3>Licencias</h3><small>En curso y próximos 7 días</small></div><div id="ini-licencias"></div></div>
     </div>
   </section>
 
@@ -643,7 +708,7 @@
           <button type="button" data-v="" aria-pressed="true">Todos</button><button type="button" data-v="Médico" aria-pressed="false">Médicos</button><button type="button" data-v="Enfermero" aria-pressed="false">Enfermeros</button><button type="button" data-v="Chofer" aria-pressed="false">Choferes</button>
         </div>
         <div class="seg" id="gu-estado" role="group" aria-label="Estado">
-          <button type="button" data-v="" aria-pressed="true">Todas</button><button type="button" data-v="vac" aria-pressed="false">Vacantes</button><button type="button" data-v="cub" aria-pressed="false">Cubiertas</button>
+          <button type="button" data-v="" aria-pressed="true">Todas</button><button type="button" data-v="vac" aria-pressed="false">Vacantes</button><button type="button" data-v="cub" aria-pressed="false">Cubiertas</button><button type="button" data-v="reemp" aria-pressed="false">Reemplazos</button>
         </div>
         <input class="buscar" id="gu-buscar" type="search" placeholder="Buscar persona o legajo" autocomplete="off">
       </div>
@@ -652,6 +717,38 @@
     <div class="sync" id="sync-guardias"><span class="spin"></span><span></span></div>
     <div class="dias-cel" id="gu-dias"></div>
     <div id="gu-grilla"></div>
+  </section>
+
+  <!-- ===== Guardias fijas y licencias ===== -->
+  <section id="v-fijas" class="vista hidden">
+    <div class="cab">
+      <div><h1>Guardias fijas</h1><p class="lead">Quién cubre cada puesto, cada semana. Las guardias de las próximas semanas se arman solas desde acá.</p></div>
+      <div class="cab-acc">
+        <button class="btn" id="fi-licencia" type="button" data-permiso="editarFijas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="m9 13 6 5"/><path d="m15 13-6 5"/></svg>Cargar licencia</button>
+        <button class="btn primario" id="fi-nueva" type="button" data-permiso="editarFijas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Agregar guardia fija</button>
+      </div>
+    </div>
+    <div class="chips" id="fi-modo" role="group" aria-label="Ver">
+      <button type="button" data-m="esquema" aria-pressed="true">Esquema semanal</button>
+      <button type="button" data-m="licencias" aria-pressed="false">Licencias <span id="fi-cnt-lic"></span></button>
+    </div>
+    <div id="fi-esquema">
+      <div class="lineas-tabs" id="fi-lineas" role="tablist"></div>
+      <div class="herramientas">
+        <p class="ayuda sin-mt" id="fi-resumen"></p>
+        <div class="filtros">
+          <div class="seg" id="fi-tipo" role="group" aria-label="Tipo">
+            <button type="button" data-v="" aria-pressed="true">Todos</button><button type="button" data-v="Médico" aria-pressed="false">Médicos</button><button type="button" data-v="Enfermero" aria-pressed="false">Enfermeros</button><button type="button" data-v="Chofer" aria-pressed="false">Choferes</button>
+          </div>
+          <input class="buscar" id="fi-buscar" type="search" placeholder="Buscar persona" autocomplete="off">
+        </div>
+      </div>
+      <div id="fi-bases"></div>
+    </div>
+    <div id="fi-licencias" class="hidden">
+      <div class="herramientas"><div class="filtros"><input class="buscar" id="fi-buscar-lic" type="search" placeholder="Buscar persona" autocomplete="off"></div></div>
+      <div id="fi-lista-lic" class="lista"></div>
+    </div>
   </section>
 
   <!-- ===== Personal ===== -->
@@ -719,6 +816,9 @@
   <!-- ===== Más (solo celular) ===== -->
   <section id="v-mas" class="vista hidden">
     <div class="mas-cuenta"><span class="avatar grande" id="mas-av"></span><div><b id="mas-nombre"></b><small id="mas-rol"></small></div></div>
+    <div class="mas-grupo">
+      <button class="mas-item" type="button" data-ir="fijas"><span>Guardias fijas y licencias</span></button>
+    </div>
     <div class="mas-grupo" id="mas-admin">
       <button class="mas-item" type="button" data-ir="bases" data-permiso="editarBases"><span>Líneas y bases</span></button>
       <button class="mas-item" type="button" data-ir="usuarios" data-permiso="usuarios"><span>Usuarios</span></button>
@@ -731,7 +831,7 @@
     <button class="btn peligro ancho" type="button" id="mas-salir">Salir</button>
   </section>
 
-  <footer class="pie" id="pie">Coordinación de Guardias FFCC · Versión 2026-10-07 c</footer>
+  <footer class="pie" id="pie">Coordinación de Guardias FFCC · Versión 2026-10-07 d</footer>
 </main>
 
 <!-- ===== Barra de abajo (celular) ===== -->
@@ -747,6 +847,7 @@
   <div class="caja">
     <div class="caja-cab"><div><h3 id="mg-titulo">Nueva guardia</h3><small id="mg-subtitulo"></small></div><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <div class="caja-cuerpo">
+      <div class="info-fija hidden" id="mg-fija"></div>
       <div class="fila2">
         <div class="campo"><label for="mg-fecha">Fecha</label><input type="date" id="mg-fecha"><small class="ayuda" id="mg-dia"></small></div>
         <div class="campo"><label for="mg-linea">Línea</label><select id="mg-linea"></select></div>
@@ -798,6 +899,7 @@
         <div class="campo"><label for="mp-celular">Celular <span class="opt">(opcional)</span></label><input id="mp-celular" type="tel" autocomplete="off"></div>
       </div>
       <div class="campo"><label for="mp-contratacion">Contratación</label><select id="mp-contratacion"></select></div>
+      <div id="mp-esquema" class="ficha-esquema hidden"></div>
     </div>
     <div class="caja-pie">
       <button class="btn peligro-suave" type="button" id="mp-estado">Dar de baja</button>
@@ -832,12 +934,69 @@
   </div>
 </div>
 
+<!-- ===== Ventana: guardia fija ===== -->
+<div class="modal" id="m-fija" role="dialog" aria-modal="true" aria-labelledby="mf-titulo">
+  <div class="caja">
+    <div class="caja-cab"><div><h3 id="mf-titulo">Guardia fija</h3><small>Se repite todas las semanas en los días elegidos</small></div><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <div class="fila2">
+        <div class="campo"><label for="mf-linea">Línea</label><select id="mf-linea"></select></div>
+        <div class="campo"><label for="mf-base">Base</label><select id="mf-base"></select></div>
+      </div>
+      <div class="campo"><label>Tipo</label>
+        <div class="seg ancho" id="mf-tipo" role="group" aria-label="Tipo"><button type="button" data-v="Médico">Médico</button><button type="button" data-v="Enfermero">Enfermero</button><button type="button" data-v="Chofer">Chofer</button></div>
+      </div>
+      <div class="campo"><label>Días de la semana</label>
+        <div class="dias-sel" id="mf-dias"></div>
+        <small class="ayuda" id="mf-dias-rapido">Rápido: <button type="button" class="link" data-dias="0,2,4">Lun, Mié y Vie</button> · <button type="button" class="link" data-dias="1,3">Mar y Jue</button> · <button type="button" class="link" data-dias="0,1,2,3,4">Lun a Vie</button> · <button type="button" class="link" data-dias="5,6">Fin de semana</button></small>
+      </div>
+      <div class="campo"><label>Horario</label>
+        <div class="turnos" id="mf-turnos"></div>
+        <div class="fila2">
+          <div class="campo sin-mb"><label for="mf-ing" class="sub">Ingreso</label><input type="time" id="mf-ing"></div>
+          <div class="campo sin-mb"><label for="mf-egr" class="sub">Egreso</label><input type="time" id="mf-egr"></div>
+        </div>
+        <small class="ayuda" id="mf-dur"></small>
+      </div>
+      <div class="campo"><label for="mf-persona">Titular</label><select id="mf-persona"></select><div class="aviso hidden" id="mf-aviso"></div></div>
+      <div class="fila2">
+        <div class="campo"><label for="mf-desde">Desde</label><input type="date" id="mf-desde"></div>
+        <div class="campo"><label for="mf-hasta">Hasta <span class="opt">(opcional)</span></label><input type="date" id="mf-hasta"></div>
+      </div>
+      <p class="ayuda sin-mt">Al guardar se arman sus guardias desde hoy. Las que alguien cambió a mano (por ejemplo, un reemplazo) se respetan.</p>
+    </div>
+    <div class="caja-pie">
+      <button class="btn peligro-suave" type="button" id="mf-baja">Dar de baja</button>
+      <span class="relleno"></span>
+      <button class="btn" type="button" data-cerrar>Cancelar</button>
+      <button class="btn primario" type="button" id="mf-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Ventana: licencia ===== -->
+<div class="modal" id="m-licencia" role="dialog" aria-modal="true" aria-labelledby="ml-titulo">
+  <div class="caja chica">
+    <div class="caja-cab"><div><h3 id="ml-titulo">Cargar licencia</h3><small>Sus guardias de esas fechas quedan vacantes para asignar un reemplazo</small></div><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <div class="campo"><label for="ml-persona">Persona</label><select id="ml-persona"></select></div>
+      <div class="campo"><label for="ml-motivo">Motivo</label><select id="ml-motivo"></select></div>
+      <div class="fila2">
+        <div class="campo"><label for="ml-desde">Desde</label><input type="date" id="ml-desde"></div>
+        <div class="campo"><label for="ml-hasta">Hasta</label><input type="date" id="ml-hasta"></div>
+      </div>
+      <div class="aviso hidden" id="ml-info"></div>
+    </div>
+    <div class="caja-pie"><span class="relleno"></span><button class="btn" type="button" data-cerrar>Cancelar</button><button class="btn primario" type="button" id="ml-guardar">Cargar licencia</button></div>
+  </div>
+</div>
+
 <!-- ===== Ventana: copiar semana ===== -->
 <div class="modal" id="m-copiar" role="dialog" aria-modal="true" aria-labelledby="mc-titulo">
   <div class="caja chica">
     <div class="caja-cab"><h3 id="mc-titulo">Copiar semana</h3><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <div class="caja-cuerpo">
-      <p class="ayuda sin-mt">Copia las guardias con el mismo horario y la misma persona. Si alguien ya no está activo o se superpone con otra guardia, la copia queda vacante.</p>
+      <p class="ayuda sin-mt">Copia las guardias <b>sueltas</b> (las que no salen de una guardia fija) con el mismo horario y la misma persona. Las fijas no hace falta copiarlas: se arman solas cada semana. Si alguien ya no está activo o se superpone con otra guardia, la copia queda vacante.</p>
       <div class="campo"><label for="mc-linea">Línea</label><select id="mc-linea"></select></div>
       <div class="fila2">
         <div class="campo"><label for="mc-origen">De la semana del</label><input type="date" id="mc-origen"></div>
@@ -884,7 +1043,7 @@
   const SCRIPT_URL = window.API_URL || SCRIPT_URL_PUBLICADA;
 
   // Al publicar una versión nueva, cambiar VERSION (la fecha con una letra). Se ve en el pie y en el ingreso.
-  const VERSION = '2026-10-07 c';
+  const VERSION = '2026-10-07 d';
 
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -898,15 +1057,15 @@
   const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const TURNOS_RAPIDOS = [['07:00', '19:00'], ['19:00', '07:00'], ['08:00', '20:00'], ['20:00', '08:00'], ['08:00', '08:00']];
   const DESCRIPCION_ROLES = {
-    'Administrador': 'Todo: guardias, personal, líneas y bases, usuarios e historial.',
-    'Supervisor': 'Guardias (también eliminar y copiar semanas), personal e historial.',
+    'Administrador': 'Todo: guardias, guardias fijas y licencias, personal, líneas y bases, usuarios e historial.',
+    'Supervisor': 'Guardias (también eliminar y copiar semanas), guardias fijas y licencias, personal e historial.',
     'Operador': 'Crea, edita y asigna guardias. Ve el personal.',
     'Consulta': 'Solo mira: tablero, guardias y personal.',
   };
 
   // ===== Estado general =====
   let sesion = null; try { sesion = JSON.parse(localStorage.getItem('sesion') || 'null'); } catch {}
-  let cat = { lineas: [], bases: [], personal: [], tipos: TIPOS, contrataciones: [], tiposBase: [], roles: [] };
+  let cat = { lineas: [], bases: [], personal: [], fijas: [], licencias: [], tipos: TIPOS, contrataciones: [], tiposBase: [], motivos: [], roles: [] };
   let permisos = {};
   let vistaActual = '';
 
@@ -1056,17 +1215,22 @@
   }
 
   // ===== Datos: catálogo (líneas, bases, personal) y guardias por rango de fechas =====
-  let lineaPorId = {}, basePorId = {}, personaPorId = {};
+  let lineaPorId = {}, basePorId = {}, personaPorId = {}, fijaPorId = {};
 
   async function cargarCatalogo() {
     const r = await api('catalogo');
     cat = r; permisos = r.permisos || {}; verDatos = r.ver;
     sesion = { ...sesion, ...r.usuario }; guardarSesion(sesion);
-    lineaPorId = {}; basePorId = {}; personaPorId = {};
+    indexarCatalogo();
+    try { localStorage.setItem('catalogo', JSON.stringify(r)); } catch {}
+  }
+  function indexarCatalogo() {
+    cat.fijas = cat.fijas || []; cat.licencias = cat.licencias || [];
+    lineaPorId = {}; basePorId = {}; personaPorId = {}; fijaPorId = {};
     cat.lineas.forEach(l => { lineaPorId[l.id] = l; });
     cat.bases.forEach(b => { basePorId[b.id] = b; });
     cat.personal.forEach(p => { personaPorId[p.id] = p; });
-    try { localStorage.setItem('catalogo', JSON.stringify(r)); } catch {}
+    cat.fijas.forEach(f => { fijaPorId[f.id] = f; });
   }
   const lineasActivas = () => cat.lineas.filter(l => l.activo);
   const basesDeLinea = (lineaId, todas) => cat.bases.filter(b => b.linea === lineaId && (todas || b.activo))
@@ -1076,6 +1240,14 @@
   const nombreBase = id => (basePorId[id] || {}).nombre || id;
   const nombreLinea = id => (lineaPorId[id] || {}).nombre || id;
   const colorLinea = id => (lineaPorId[id] || {}).color || '#1B3A5C';
+
+  // ---- Guardias fijas y licencias ----
+  const textoDias = dias => dias.length === 7 ? 'Todos los días' : dias.map(d => DIAS_CORTOS[d]).join(', ');
+  const fijasDe = personaId => cat.fijas.filter(f => f.personal === personaId);
+  const diasFijosDe = personaId => fijasDe(personaId).reduce((s, f) => s + f.dias.length, 0);
+  const licenciaEn = (personaId, fecha) => cat.licencias.find(l => l.personal === personaId && fecha >= l.desde && fecha <= l.hasta) || null;
+  // estado de una guardia que sale de una fija: 'titular', 'reemplazo' (cubre otra persona) o 'ausente' (vacante con titular)
+  const estadoFija = g => !g.titular ? '' : g.personal === g.titular ? 'titular' : g.personal ? 'reemplazo' : 'ausente';
 
   // ---- Guardias: se piden por rango y quedan en memoria hasta el próximo cambio ----
   const cacheGuardias = new Map();     // 'desde|hasta' -> lista
@@ -1166,6 +1338,7 @@
   const VISTAS = {
     inicio:    { pintar: r => pintarInicio(r) },
     guardias:  { pintar: r => pintarGuardias(r) },
+    fijas:     { pintar: r => pintarFijas(r) },
     personal:  { pintar: r => pintarPersonal(r) },
     bases:     { pintar: () => pintarBases(), permiso: 'editarBases' },
     usuarios:  { pintar: r => pintarUsuarios(r), permiso: 'usuarios' },
@@ -1183,7 +1356,7 @@
     vistaActual = v;
     Object.keys(VISTAS).forEach(n => $('#v-' + n).classList.toggle('hidden', n !== v));
     $$('.nav button[data-vista]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.vista === v)));
-    const enMas = ['mas', 'bases', 'usuarios', 'historial'].includes(v);
+    const enMas = ['mas', 'fijas', 'bases', 'usuarios', 'historial'].includes(v);
     $$('#bnav button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.ir === v || (b.dataset.ir === 'mas' && enMas))));
     if (opciones && opciones.antes) opciones.antes();
     window.scrollTo({ top: 0 });
@@ -1338,7 +1511,8 @@
     const cub = lista.filter(g => g.personal);
     const horas = lista.reduce((s, g) => s + horasDe(g), 0), horasCub = cub.reduce((s, g) => s + horasDe(g), 0);
     return { total: lista.length, cubiertas: cub.length, vacantes: lista.length - cub.length, pct: pct(cub.length, lista.length),
-      horas: Math.round(horas), horasCub: Math.round(horasCub), personas: new Set(cub.map(g => g.personal)).size };
+      horas: Math.round(horas), horasCub: Math.round(horasCub), personas: new Set(cub.map(g => g.personal)).size,
+      reemplazos: lista.filter(g => estadoFija(g) === 'reemplazo').length };
   }
   const claseCobertura = p => p >= 90 ? 'ok' : p >= 75 ? 'warn' : 'mal';
 
@@ -1362,7 +1536,7 @@
 
     $('#ini-kpis').innerHTML = [
       `<div class="kpi"><b>${r.total}</b><span>Guardias</span><small>${r.horas.toLocaleString('es-AR')} h programadas</small></div>`,
-      `<div class="kpi ok"><b>${r.cubiertas}</b><span>Cubiertas</span><small>${r.personas} personas asignadas</small></div>`,
+      `<div class="kpi ok"><b>${r.cubiertas}</b><span>Cubiertas</span><small>${r.personas} personas${r.reemplazos ? ` · ${plural(r.reemplazos, 'reemplazo', 'reemplazos')}` : ''}</small></div>`,
       `<div class="kpi ${r.vacantes ? 'mal' : 'ok'}"><b>${r.vacantes}</b><span>Vacantes</span><small>${(r.horas - r.horasCub).toLocaleString('es-AR')} h sin cubrir</small></div>`,
       `<div class="kpi acento"><b>${r.pct}%</b><span>Cobertura</span><small>${claseCobertura(r.pct) === 'ok' ? 'En objetivo (90 % o más)' : 'Por debajo del 90 %'}</small></div>`,
     ].join('');
@@ -1403,6 +1577,8 @@
       return `<div class="dias-barras">${cols.join('')}</div><p class="ayuda">Alto de la barra: guardias del día. Verde: 90 % o más cubiertas; amarillo: 75 % o más; rojo: menos.</p>`;
     })();
 
+    pintarLicenciasInicio();
+
     // próximas vacantes (desde ahora hasta 48 h)
     const ahora = ahoraMs(), limite = ahora + 48 * 3600e3;
     const prox = proximas.filter(g => !g.personal && activas.has(g.linea)).map(g => ({ g, iv: intervalo(g) }))
@@ -1410,11 +1586,22 @@
     proximasInicio = prox.map(x => x.g);
     $('#ini-proximas').innerHTML = prox.length ? `<p class="ayuda sin-mt" style="margin-bottom:4px">${plural(prox.length, 'guardia sin cubrir', 'guardias sin cubrir')}</p><div class="lista-scroll">` + prox.slice(0, 60).map(({ g, iv }) => `
       <div class="vacante-fila"><span class="cuando">${iv[0] <= ahora ? '<span class="pill mal">Ahora</span>' : esc(fechaCorta(g.fecha))}<small>${esc(textoHorario(g))} h</small></span>
-        <span class="que"><b>${esc(nombreBase(g.base))}</b><small>${esc(nombreLinea(g.linea))} · <span class="pill t-${esc(g.tipo)}">${esc(g.tipo)}</span></small></span>
+        <span class="que"><b>${esc(nombreBase(g.base))}</b><small>${esc(nombreLinea(g.linea))} · <span class="pill t-${esc(g.tipo)}">${esc(g.tipo)}</span>${personaPorId[g.titular] ? ` · Titular: ${esc(personaPorId[g.titular].apellido)}${(l => l ? ` (${esc(l.motivo.toLowerCase())})` : '')(licenciaEn(g.titular, g.fecha))}` : ''}</small></span>
         ${permisos.editarGuardias ? `<button class="btn chico" type="button" data-asignar="${esc(g.id)}">Asignar</button>` : ''}</div>`).join('') + '</div>'
       : '<div class="vacio"><b>Todo cubierto</b>No hay guardias vacantes en las próximas 48 horas.</div>';
   }
   let proximasInicio = [];
+
+  // Licencias en curso y las que empiezan en los próximos 7 días
+  function pintarLicenciasInicio() {
+    const hoy = hoyISO(), limite = sumarDias(hoy, 7);
+    const lista = cat.licencias.filter(l => l.hasta >= hoy && l.desde <= limite).sort((a, b) => a.desde.localeCompare(b.desde));
+    $('#ini-licencias').innerHTML = lista.length ? '<div class="lista-scroll">' + lista.map(l => {
+      const p = personaPorId[l.personal] || { apellido: '¿?', nombre: '', tipo: '' };
+      return `<div class="vacante-fila"><span class="cuando">${l.desde <= hoy ? '<span class="pill warn">Hoy</span>' : esc(fechaCorta(l.desde))}<small>hasta ${ddmm(l.hasta)}</small></span>
+        <span class="que"><b>${esc(nombrePersona(p))}</b><small>${esc(l.motivo)}${p.tipo ? ` · <span class="pill t-${esc(p.tipo)}">${esc(p.tipo)}</span>` : ''}</small></span></div>`;
+    }).join('') + '</div>' : '<div class="vacio"><b>Nadie de licencia</b>Ni hoy ni en los próximos 7 días.</div>';
+  }
 
   function segElegirChips() { $$('#ini-periodo button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.p === periodoInicio))); }
   $('#ini-periodo').addEventListener('click', e => {
@@ -1439,7 +1626,8 @@
 
   // ===== Guardias: grilla semanal de una línea =====
   // Computadora: tabla con las bases en filas y los 7 días en columnas. Celular: tira de días y, para el día elegido, una
-  // tarjeta por base. Cada guardia es una "ficha": verde si está cubierta, roja punteada si está vacante.
+  // tarjeta por base. Cada guardia es una "ficha": verde si está cubierta, roja punteada si está vacante y naranja si la
+  // cubre un reemplazo del titular fijo. Las que salen de una guardia fija llevan ↻.
   let guLinea = ''; try { guLinea = localStorage.getItem('gu_linea') || ''; } catch {}
   let guLunes = lunesDe(hoyISO()), guDia = hoyISO();
   const guFiltro = { tipo: '', estado: '', texto: '' };
@@ -1451,19 +1639,23 @@
     if (guFiltro.tipo && g.tipo !== guFiltro.tipo) return false;
     if (guFiltro.estado === 'vac' && g.personal) return false;
     if (guFiltro.estado === 'cub' && !g.personal) return false;
+    if (guFiltro.estado === 'reemp' && estadoFija(g) !== 'reemplazo') return false;
     if (guFiltro.texto) {
-      const p = personaPorId[g.personal];
-      const txt = [nombreDeGuardia(g), p && p.legajo, g.obs].join(' ').toLowerCase();
+      const p = personaPorId[g.personal], t = personaPorId[g.titular];
+      const txt = [nombreDeGuardia(g), p && p.legajo, t && nombrePersona(t), g.obs].join(' ').toLowerCase();
       if (!txt.includes(guFiltro.texto)) return false;
     }
     return true;
   }
 
   const fichaHTML = g => {
-    const nombre = nombreDeGuardia(g);
-    return `<button type="button" class="g t-${esc(g.tipo)} ${g.personal ? 'cub' : 'vac'}" data-g="${esc(g.id)}" title="${esc(`${g.tipo} · ${g.ingreso} a ${g.egreso}${nombre ? ' · ' + nombre : ' · VACANTE'}${g.obs ? '\n' + g.obs : ''}`)}">
-      ${g.obs ? '<i class="g-obs"></i>' : ''}<span class="g-top"><i class="g-tipo">${TIPO_CORTO[g.tipo] || ''}</i><span class="g-hora">${esc(textoHorario(g))}</span></span>
-      <span class="g-nom">${g.personal ? esc(nombre) : 'VACANTE'}</span></button>`;
+    const nombre = nombreDeGuardia(g), ef = estadoFija(g), tit = personaPorId[g.titular];
+    const nota = ef === 'reemplazo' ? `por ${tit ? tit.apellido : 'el titular'}` : ef === 'ausente' ? `Titular: ${tit ? tit.apellido : '¿?'}` : '';
+    const titulo = `${g.tipo} · ${g.ingreso} a ${g.egreso}${nombre ? ' · ' + nombre : ' · VACANTE'}` +
+      (g.fija ? `\nGuardia fija · ${tit ? 'titular ' + nombrePersona(tit) : 'sin titular'}${ef === 'reemplazo' ? ' (cubre un reemplazo)' : ''}` : '') + (g.obs ? '\n' + g.obs : '');
+    return `<button type="button" class="g t-${esc(g.tipo)} ${g.personal ? 'cub' : 'vac'} ${ef === 'reemplazo' ? 'reemp' : ''}" data-g="${esc(g.id)}" title="${esc(titulo)}">
+      ${g.obs ? '<i class="g-obs"></i>' : ''}<span class="g-top"><i class="g-tipo">${TIPO_CORTO[g.tipo] || ''}</i><span class="g-hora">${esc(textoHorario(g))}</span>${g.fija ? '<i class="g-fija" aria-label="Guardia fija">↻</i>' : ''}</span>
+      <span class="g-nom">${g.personal ? esc(nombre) : 'VACANTE'}</span>${nota ? `<span class="g-nota">${esc(nota)}</span>` : ''}</button>`;
   };
 
   async function pintarGuardias(refresco) {
@@ -1494,10 +1686,10 @@
     const conGuardias = new Set(deLinea.map(g => g.base));
     const bases = basesDeLinea(guLinea, true).filter(b => b.activo || conGuardias.has(b.id));
     const visibles = deLinea.filter(pasaFiltro);
-    const cub = deLinea.filter(g => g.personal).length;
+    const cub = deLinea.filter(g => g.personal).length, reemp = deLinea.filter(g => estadoFija(g) === 'reemplazo').length;
     $('#gu-sub').textContent = `${nombreLinea(guLinea)} · ${plural(bases.length, 'base', 'bases')}`;
     $('#gu-resumen').innerHTML = `<span class="pill">${plural(deLinea.length, 'guardia', 'guardias')}</span><span class="pill ok">${cub} cubiertas</span>
-      <span class="pill ${deLinea.length - cub ? 'mal' : 'ok'}">${plural(deLinea.length - cub, 'vacante', 'vacantes')}</span><span class="pill">${pct(cub, deLinea.length)}% de cobertura</span>
+      <span class="pill ${deLinea.length - cub ? 'mal' : 'ok'}">${plural(deLinea.length - cub, 'vacante', 'vacantes')}</span><span class="pill">${pct(cub, deLinea.length)}% de cobertura</span>${reemp ? `<span class="pill warn">${plural(reemp, 'reemplazo', 'reemplazos')}</span>` : ''}
       ${visibles.length !== deLinea.length ? `<span class="pill warn">Filtro: se ven ${visibles.length}</span>` : ''}`;
 
     if (!bases.length) { $('#gu-grilla').innerHTML = '<div class="vacio"><b>Esta línea no tiene bases</b>Agregalas en Líneas y bases.</div>'; $('#gu-dias').innerHTML = ''; return; }
@@ -1581,6 +1773,7 @@
     $('#mg-egr').value = g ? g.egreso : '19:00';
     $('#mg-obs').value = g ? (g.obs || '') : '';
     elegirPersona(g ? g.personal : '');
+    pintarInfoFija(g);
     $('#mg-meta').innerHTML = g ? [g.creado && `Creada por ${esc(g.creadoPor)} el ${esc(fechaHora(g.creado))}`, g.modificado && `Modificada por ${esc(g.modificadoPor)} el ${esc(fechaHora(g.modificado))}`].filter(Boolean).join('<br>') : '';
     $('#mg-eliminar').classList.toggle('hidden', !(g && permisos.eliminarGuardias));
     $('#mg-guardar').classList.toggle('hidden', !puede);
@@ -1593,6 +1786,25 @@
     const f = $('#mg-fecha').value;
     if (fechaValida(f)) traerGuardias(sumarDias(f, -1), sumarDias(f, 1)).then(revisarDisponibilidad).catch(() => {});
   }
+  // Si la guardia sale de una fija: quién es el titular, su esquema semanal y en qué está hoy (cubre él, un reemplazo o nadie)
+  function pintarInfoFija(g) {
+    const caja = $('#mg-fija');
+    caja.classList.toggle('hidden', !(g && g.fija));
+    if (!g || !g.fija) return;
+    const f = fijaPorId[g.fija], tit = personaPorId[g.titular], ef = estadoFija(g);
+    const lic = tit ? licenciaEn(tit.id, g.fecha) : null;
+    const estado = ef === 'titular' ? 'La cubre el titular.'
+      : ef === 'reemplazo' ? `La cubre un reemplazo${lic ? ` (el titular está de ${lic.motivo.toLowerCase()} hasta el ${ddmm(lic.hasta)})` : ''}.`
+      : ef === 'ausente' ? (lic ? `El titular está de ${lic.motivo.toLowerCase()} hasta el ${ddmm(lic.hasta)}: asigná un reemplazo.` : 'El titular no la cubre: asigná un reemplazo.')
+      : 'Puesto fijo sin titular: asigná a alguien.';
+    const volver = tit && tit.activo && g.personal !== g.titular && !lic && permisos.editarGuardias;
+    caja.innerHTML = `<b>↻ Guardia fija</b> · ${tit ? 'Titular: ' + esc(nombrePersona(tit)) : 'Sin titular'}
+      <small>${f ? esc(`${textoDias(f.dias)} · ${textoHorario(f)}`) : 'La guardia fija se dio de baja'}</small>
+      <span>${esc(estado)}${g.manual ? ' Se cambió a mano: las fijas ya no la tocan.' : ''}</span>
+      ${volver ? '<button type="button" class="btn chico" id="mg-al-titular">Volver al titular</button>' : ''}`;
+  }
+  $('#mg-fija').addEventListener('click', e => { if (e.target.closest('#mg-al-titular') && edGuardia) elegirPersona(edGuardia.titular); });
+
   const fechaHora = t => { const m = String(t).match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]} ${m[4]}` : t; };
 
   function llenarLineas(sel) {
@@ -1651,13 +1863,17 @@
     const av = $('#mg-aviso'), p = personaPorId[edPersona];
     if (!edPersona) { av.className = 'aviso'; av.textContent = 'Sin persona asignada: la guardia queda VACANTE.'; return; }
     const tipo = segValor($('#mg-tipo'));
-    const choque = choqueDe(edPersona, datosVentana());
+    const d = datosVentana(), choque = choqueDe(edPersona, d);
+    const lic = fechaValida(d.fecha) ? licenciaEn(edPersona, d.fecha) : null;
     const avisos = [];
     if (choque) avisos.push(`Ya tiene una guardia que se superpone: ${textoChoque(choque)}.`);
+    if (lic) avisos.push(`Está de ${lic.motivo.toLowerCase()} del ${ddmm(lic.desde)} al ${ddmm(lic.hasta)}.`);
     if (p && !p.activo) avisos.push(`${nombrePersona(p)} está dado de baja.`);
     if (p && tipo && p.tipo !== tipo) avisos.push(`Es ${p.tipo.toLowerCase()} y la guardia es de ${tipo.toLowerCase()}.`);
-    av.className = 'aviso ' + (choque ? 'mal' : avisos.length ? '' : 'ok');
-    av.textContent = avisos.length ? avisos.join(' ') : `${p ? nombrePersona(p) : 'La persona'} está libre en ese horario${p && p.contratacion ? ` · ${p.contratacion}` : ''}.`;
+    const tit = edGuardia && edGuardia.titular && edGuardia.titular !== edPersona ? personaPorId[edGuardia.titular] : null;
+    av.className = 'aviso ' + (choque || lic ? 'mal' : avisos.length ? '' : 'ok');
+    av.textContent = (avisos.length ? avisos.join(' ') : `${p ? nombrePersona(p) : 'La persona'} está libre en ese horario${p && p.contratacion ? ` · ${p.contratacion}` : ''}.`) +
+      (tit ? ` Queda como reemplazo de ${nombrePersona(tit)}.` : '');
     av.classList.remove('hidden');
   }
 
@@ -1668,13 +1884,16 @@
     const tipo = segValor($('#mg-tipo')), d = datosVentana();
     const coincide = p => !q || sinAcentos(`${p.apellido} ${p.nombre} ${p.nombre} ${p.apellido} ${p.legajo}`).includes(q);
     const lista = cat.personal.filter(p => p.activo && coincide(p)).sort((a, b) => a.apellido.localeCompare(b.apellido, 'es') || a.nombre.localeCompare(b.nombre, 'es'));
-    const mismos = lista.filter(p => p.tipo === tipo), otros = lista.filter(p => p.tipo !== tipo);
+    // primero los que están libres en ese horario (para elegir un reemplazo rápido)
+    const ocupado = p => (choqueDe(p.id, d) || (fechaValida(d.fecha) && licenciaEn(p.id, d.fecha))) ? 1 : 0;
+    const mismos = lista.filter(p => p.tipo === tipo).sort((a, b) => ocupado(a) - ocupado(b)), otros = lista.filter(p => p.tipo !== tipo);
     const marcar = t => { if (!q) return esc(t); const i = sinAcentos(t).indexOf(q); return i < 0 ? esc(t) : esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length)); };
     const fila = p => {
-      const ch = choqueDe(p.id, d);
+      const ch = choqueDe(p.id, d), lic = fechaValida(d.fecha) ? licenciaEn(p.id, d.fecha) : null;
       return `<button type="button" class="sug" role="option" data-p="${esc(p.id)}"><span class="avatar t-${esc(p.tipo)}">${esc(iniciales(p.apellido, p.nombre))}</span>
         <span class="datos"><b>${marcar(nombrePersona(p))}</b><small>Leg. ${marcar(p.legajo)} · ${esc(p.tipo)}${p.contratacion ? ' · ' + esc(p.contratacion) : ''}</small></span>
-        ${ch ? `<span class="pill mal" title="${esc(textoChoque(ch))}">Ocupado</span>` : '<span class="pill ok">Libre</span>'}</button>`;
+        ${lic ? `<span class="pill mal" title="${esc(`${lic.motivo} del ${ddmm(lic.desde)} al ${ddmm(lic.hasta)}`)}">${esc(lic.motivo)}</span>`
+          : ch ? `<span class="pill mal" title="${esc(textoChoque(ch))}">Ocupado</span>` : '<span class="pill ok">Libre</span>'}</button>`;
     };
     const partes = [];
     if (mismos.length) partes.push(`<div class="sec">${esc(TIPO_PLURAL[tipo] || 'Mismo tipo')}</div>` + mismos.slice(0, 40).map(fila).join(''));
@@ -1784,11 +2003,13 @@
     const cuenta = TIPOS.map(t => `${cat.personal.filter(p => p.activo && p.tipo === t).length} ${TIPO_PLURAL[t].toLowerCase()}`).join(' · ');
     $('#v-personal .lead').textContent = `${cuenta} activos.`;
     $('#pe-lista').innerHTML = lista.length ? lista.map(p => {
-      const n = porPersona[p.id] || 0;
+      const n = porPersona[p.id] || 0, fijos = diasFijosDe(p.id), lic = licenciaEn(p.id, hoy);
+      const extra = (fijos ? `<span class="pill" title="${esc(fijasDe(p.id).map(f => `${textoDias(f.dias)} ${textoHorario(f)} · ${nombreBase(f.base)}`).join('\n'))}">↻ ${plural(fijos, 'día fijo', 'días fijos')}</span>` : '') +
+        (lic ? `<span class="pill warn" title="Hasta el ${ddmm(lic.hasta)}">${esc(lic.motivo)}</span>` : '');
       return `<div class="item ${p.activo ? '' : 'baja'} ${puede ? 'clic' : ''}" data-p="${esc(p.id)}">
         <span class="avatar t-${esc(p.tipo)}">${esc(iniciales(p.apellido, p.nombre))}</span>
         <div class="datos"><b>${esc(nombrePersona(p))}</b><small>Leg. ${esc(p.legajo)}${p.celular ? ' · ' + esc(p.celular) : ''}${p.contratacion ? ' · ' + esc(p.contratacion) : ''}</small></div>
-        <div class="etiquetas"><span class="pill t-${esc(p.tipo)}">${esc(p.tipo)}</span>${p.activo ? `<span class="pill ${n ? 'ok' : ''}" title="Guardias asignadas en los próximos 7 días">${plural(n, 'guardia', 'guardias')} en 7 días</span>` : '<span class="pill mal">De baja</span>'}</div>
+        <div class="etiquetas"><span class="pill t-${esc(p.tipo)}">${esc(p.tipo)}</span>${p.activo ? extra : ''}${p.activo ? `<span class="pill ${n ? 'ok' : ''}" title="Guardias asignadas en los próximos 7 días">${plural(n, 'guardia', 'guardias')} en 7 días</span>` : '<span class="pill mal">De baja</span>'}</div>
       </div>`;
     }).join('') : `<div class="vacio"><b>Nadie coincide</b>${cat.personal.length ? 'Probá con otro filtro o búsqueda.' : 'Todavía no hay personal cargado.'}</div>`;
   }
@@ -1812,6 +2033,7 @@
     $('#mp-estado').textContent = p && !p.activo ? 'Reactivar' : 'Dar de baja';
     $('#mp-estado').className = 'btn ' + (p && !p.activo ? '' : 'peligro-suave');
     $$('#m-persona .campo.invalido').forEach(c => c.classList.remove('invalido'));
+    pintarEsquemaPersona(p);
     abrirVentana('m-persona');
   }
   $('#mp-guardar').addEventListener('click', async e => {
@@ -1829,7 +2051,8 @@
       try { await escribir('estadoPersonal', { id: p.id, activo: true }, { boton: btn, ok: `${nombrePersona(p)} reactivado` }); cerrarVentana('m-persona'); } catch {}
       return;
     }
-    if (!await confirmar(`¿Dar de baja a ${nombrePersona(p)}?\nNo va a aparecer para asignar guardias. Sus guardias pasadas quedan.`, { ok: 'Dar de baja', peligro: true })) return;
+    const nf = fijasDe(p.id).length;
+    if (!await confirmar(`¿Dar de baja a ${nombrePersona(p)}?\nNo va a aparecer para asignar guardias. Sus guardias pasadas quedan.${nf ? `\n\nSus ${plural(nf, 'guardia fija queda', 'guardias fijas quedan')} sin titular.` : ''}`, { ok: 'Dar de baja', peligro: true })) return;
     try {
       await escribir('estadoPersonal', { id: p.id, activo: false }, { boton: btn, ok: 'Dado de baja', silencioso: true });
       cerrarVentana('m-persona');
@@ -2001,15 +2224,16 @@
       if (!lista.length) { toast('No hay guardias en ese período', 'err'); return; }
       lista = lista.slice().sort((a, b) => (a.fecha + nombreLinea(a.linea) + nombreBase(a.base) + a.ingreso).localeCompare(b.fecha + nombreLinea(b.linea) + nombreBase(b.base) + b.ingreso, 'es'));
       const filas = lista.map(g => {
-        const p = personaPorId[g.personal];
+        const p = personaPorId[g.personal], t = personaPorId[g.titular], ef = estadoFija(g);
         return { 'Fecha': ddmmaaaa(g.fecha), 'Día': DIAS[diaSemana(g.fecha)], 'Línea': nombreLinea(g.linea), 'Base': nombreBase(g.base), 'Tipo': g.tipo,
-          'Ingreso': g.ingreso, 'Egreso': g.egreso, 'Horas': horasDe(g), 'Estado': g.personal ? 'Cubierta' : 'VACANTE',
-          'Legajo': p ? p.legajo : '', 'Personal': nombreDeGuardia(g), 'Contratación': p ? p.contratacion : '', 'Observaciones': g.obs || '', 'ID': g.id };
+          'Ingreso': g.ingreso, 'Egreso': g.egreso, 'Horas': horasDe(g), 'Estado': g.personal ? (ef === 'reemplazo' ? 'Reemplazo' : 'Cubierta') : 'VACANTE',
+          'Legajo': p ? p.legajo : '', 'Personal': nombreDeGuardia(g), 'Contratación': p ? p.contratacion : '',
+          'Origen': g.fija ? 'Fija' : 'Suelta', 'Titular fijo': t ? nombrePersona(t) : '', 'Observaciones': g.obs || '', 'ID': g.id };
       });
       const wb = XLSX.utils.book_new();
       const ws = XLSX.utils.json_to_sheet(filas);
-      ws['!cols'] = [11, 10, 13, 22, 10, 8, 8, 6, 10, 9, 26, 22, 30, 9].map(w => ({ wch: w }));
-      ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: filas.length, c: 13 } }) };
+      ws['!cols'] = [11, 10, 13, 22, 10, 8, 8, 6, 10, 9, 26, 22, 8, 24, 30, 9].map(w => ({ wch: w }));
+      ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: filas.length, c: 15 } }) };
       XLSX.utils.book_append_sheet(wb, ws, 'Guardias');
       // resumen por base
       const porBase = {};
@@ -2059,6 +2283,305 @@
   });
   $('#pin-nuevo2').addEventListener('keydown', e => { if (e.key === 'Enter') $('#pin-ok').click(); });
 
+  // ===== Guardias fijas y licencias =====
+  // Esquema semanal por base: una fila por tipo y horario, una columna por día, y en cada casillero el titular fijo.
+  // Tocar un casillero abre esa guardia fija (o una nueva con esos datos). Las licencias van en su propia lista.
+  let fiModo = 'esquema', fiLinea = '';
+  const fiFiltro = { tipo: '', texto: '', textoLic: '' };
+  const puedeFijas = () => !!permisos.editarFijas;
+  const LETRA_DIA = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+
+  function pintarFijas() {
+    $$('#fi-modo button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === fiModo)));
+    $('#fi-esquema').classList.toggle('hidden', fiModo !== 'esquema');
+    $('#fi-licencias').classList.toggle('hidden', fiModo !== 'licencias');
+    const hoy = hoyISO(), vigentes = cat.licencias.filter(l => l.hasta >= hoy).length;
+    $('#fi-cnt-lic').textContent = vigentes ? `(${vigentes})` : '';
+    if (fiModo === 'esquema') dibujarEsquema(); else dibujarLicencias();
+  }
+
+  // ---- Esquema semanal ----
+  // filas de una base: cada combinación de tipo y horario que tenga alguna fija; en cada día, las fijas que lo cubren
+  function filasEsquema(baseId) {
+    const filas = new Map();
+    cat.fijas.filter(f => f.base === baseId && (!fiFiltro.tipo || f.tipo === fiFiltro.tipo)).forEach(f => {
+      const k = `${f.tipo}|${f.ingreso}|${f.egreso}`;
+      if (!filas.has(k)) filas.set(k, { tipo: f.tipo, ingreso: f.ingreso, egreso: f.egreso, dias: [[], [], [], [], [], [], []] });
+      f.dias.forEach(d => filas.get(k).dias[d].push(f));
+    });
+    return [...filas.values()].sort((a, b) => ORDEN_TIPO[a.tipo] - ORDEN_TIPO[b.tipo] || a.ingreso.localeCompare(b.ingreso));
+  }
+  const huecosDe = filas => filas.reduce((s, fila) => s + fila.dias.filter(lista => !lista.some(f => f.personal)).length, 0);
+
+  function dibujarEsquema() {
+    const activas = lineasActivas(), hoy = hoyISO();
+    if (!activas.length) { $('#fi-bases').innerHTML = '<div class="vacio"><b>No hay líneas activas</b></div>'; return; }
+    if (!activas.some(l => l.id === fiLinea)) fiLinea = activas.some(l => l.id === guLinea) ? guLinea : activas[0].id;
+    $('#fi-lineas').innerHTML = activas.map(l => {
+      const h = basesDeLinea(l.id).reduce((s, b) => s + huecosDe(filasEsquema(b.id)), 0);
+      return `<button type="button" role="tab" data-linea="${esc(l.id)}" aria-selected="${l.id === fiLinea}" style="--c:${esc(l.color)}"><i></i>${esc(l.nombre)}<small class="${h ? 'mal' : ''}">${h ? h + ' sin titular' : '✓'}</small></button>`;
+    }).join('');
+
+    const q = sinAcentos(fiFiltro.texto).trim();
+    const coincide = f => { const p = personaPorId[f.personal]; return !!p && sinAcentos(`${p.apellido} ${p.nombre} ${p.nombre} ${p.apellido} ${p.legajo}`).includes(q); };
+    const bases = basesDeLinea(fiLinea);
+    const deLinea = cat.fijas.filter(f => f.linea === fiLinea);
+    const titulares = new Set(deLinea.map(f => f.personal).filter(Boolean));
+    const huecos = bases.reduce((s, b) => s + huecosDe(filasEsquema(b.id)), 0);
+    $('#fi-resumen').innerHTML = `${plural(deLinea.length, 'guardia fija', 'guardias fijas')} · ${plural(titulares.size, 'titular', 'titulares')}` +
+      (huecos ? ` · <b class="mal">${plural(huecos, 'turno semanal', 'turnos semanales')} sin titular</b>` : ' · todos los turnos tienen titular');
+
+    const puede = puedeFijas();
+    const html = bases.map(b => {
+      const filas = filasEsquema(b.id);
+      if (q && !filas.some(fila => fila.dias.some(lista => lista.some(coincide)))) return '';
+      const h = huecosDe(filas);
+      const cab = `<div class="panel-cab"><h3>${esc(b.nombre)} <span class="pill">${esc(b.tipo)}</span></h3>
+        <small class="${h ? 'mal' : ''}">${filas.length ? (h ? plural(h, 'turno sin titular', 'turnos sin titular') : 'Todos los turnos con titular') : 'Sin guardias fijas'}</small></div>`;
+      const cuerpo = filas.length ? `<div class="esquema-wrap"><table class="esquema"><thead><tr><th>Puesto</th>${DIAS_CORTOS.map(d => `<th>${d}</th>`).join('')}</tr></thead><tbody>` +
+        filas.map(fila => `<tr><th><span class="pill t-${esc(fila.tipo)}">${esc(TIPO_CORTO[fila.tipo])}</span> ${esc(textoHorario(fila))}</th>` + fila.dias.map((lista, d) => {
+          const fichas = lista.map(f => {
+            const p = personaPorId[f.personal], lic = p ? licenciaEn(p.id, hoy) : null;
+            const cls = [p ? '' : 'vac', lic ? 'lic' : '', q ? (coincide(f) ? 'match' : 'tenue') : ''].join(' ');
+            const titulo = `${f.tipo} · ${DIAS[d]} ${f.ingreso} a ${f.egreso}\n${p ? nombrePersona(p) : 'Sin titular'} · ${textoDias(f.dias)}${lic ? `\nHoy: ${lic.motivo} hasta el ${ddmm(lic.hasta)}` : ''}`;
+            return `<button type="button" class="fx ${cls}" data-f="${esc(f.id)}" title="${esc(titulo)}">${p ? esc(p.apellido) : 'Sin titular'}</button>`;
+          }).join('');
+          return `<td>${fichas || (puede ? `<button type="button" class="fx-mas" data-nueva="${esc(b.id)}|${esc(fila.tipo)}|${fila.ingreso}|${fila.egreso}|${d}" aria-label="Agregar titular">+</button>` : '<span class="fx-nada">—</span>')}</td>`;
+        }).join('') + '</tr>').join('') + '</tbody></table></div>'
+        : '<p class="ayuda sin-mt">Esta base todavía no tiene guardias fijas.</p>';
+      return `<div class="panel base-esquema">${cab}${cuerpo}${puede ? `<button type="button" class="btn chico" style="margin-top:8px" data-nueva-base="${esc(b.id)}">+ Guardia fija en ${esc(b.nombre)}</button>` : ''}</div>`;
+    }).join('');
+    $('#fi-bases').innerHTML = html || `<div class="vacio"><b>${q ? 'Nadie coincide en esta línea' : 'Esta línea no tiene bases'}</b>${q ? 'Probá en otra línea o con otra búsqueda.' : ''}</div>`;
+  }
+
+  // ---- Licencias ----
+  function dibujarLicencias() {
+    const hoy = hoyISO(), q = sinAcentos(fiFiltro.textoLic).trim(), puede = puedeFijas();
+    const estado = l => l.hasta < hoy ? 'pasada' : l.desde <= hoy ? 'curso' : 'proxima';
+    const orden = { curso: 0, proxima: 1, pasada: 2 };
+    const lista = cat.licencias.filter(l => { const p = personaPorId[l.personal]; return !q || (p && sinAcentos(`${p.apellido} ${p.nombre} ${p.legajo}`).includes(q)); })
+      .map(l => ({ l, e: estado(l) }))
+      .sort((a, b) => orden[a.e] - orden[b.e] || (a.e === 'pasada' ? b.l.hasta.localeCompare(a.l.hasta) : a.l.desde.localeCompare(b.l.desde)));
+    const pasadas = lista.filter(x => x.e === 'pasada').length;
+    const visibles = lista.filter(x => x.e !== 'pasada').concat(lista.filter(x => x.e === 'pasada').slice(0, 20));
+    $('#fi-lista-lic').innerHTML = visibles.map(({ l, e }) => {
+      const p = personaPorId[l.personal] || { apellido: '¿?', nombre: '', tipo: '' };
+      const dias = diasEntre(l.desde, l.hasta) + 1;
+      return `<div class="item ${e === 'pasada' ? 'baja' : ''}"><span class="avatar t-${esc(p.tipo)}">${esc(iniciales(p.apellido, p.nombre))}</span>
+        <div class="datos"><b>${esc(nombrePersona(p))}</b><small>${esc(l.motivo)} · del ${ddmmaaaa(l.desde)} al ${ddmmaaaa(l.hasta)} · ${plural(dias, 'día', 'días')}${p.tipo ? ' · ' + esc(p.tipo) : ''}</small></div>
+        <div class="etiquetas">${e === 'curso' ? '<span class="pill warn">En curso</span>' : e === 'proxima' ? '<span class="pill">Próxima</span>' : '<span class="pill">Terminada</span>'}</div>
+        ${puede && e !== 'pasada' ? `<span class="acc"><button type="button" class="btn chico peligro-suave" data-borrar-lic="${esc(l.id)}">Borrar</button></span>` : ''}</div>`;
+    }).join('') + (pasadas > 20 ? `<p class="ayuda">Se muestran las últimas 20 terminadas.</p>` : '') ||
+      `<div class="vacio"><b>${q ? 'Nadie coincide' : 'No hay licencias cargadas'}</b>${puede && !q ? 'Cargá una con el botón de arriba.' : ''}</div>`;
+  }
+
+  async function borrarLicencia(id, boton) {
+    const l = cat.licencias.find(x => x.id === id); if (!l) return false;
+    const p = personaPorId[l.personal];
+    if (!await confirmar(`¿Borrar la licencia de ${nombrePersona(p)}?\n${l.motivo} del ${ddmmaaaa(l.desde)} al ${ddmmaaaa(l.hasta)}\n\nSus guardias fijas que sigan vacantes (desde hoy) vuelven a ser suyas.`, { ok: 'Borrar', peligro: true })) return false;
+    try {
+      await escribir('eliminarLicencia', { id }, { boton, textoEspera: 'Borrando…', ok: r => r.vuelven ? `Licencia borrada · volvió a ${plural(r.vuelven, 'guardia fija', 'guardias fijas')}` : 'Licencia borrada' });
+      return true;
+    } catch { return false; }
+  }
+
+  // ---- Eventos de la pantalla ----
+  $('#fi-modo').addEventListener('click', e => { const b = e.target.closest('button[data-m]'); if (b) { fiModo = b.dataset.m; pintarFijas(); } });
+  $('#fi-lineas').addEventListener('click', e => { const b = e.target.closest('button[data-linea]'); if (b) { fiLinea = b.dataset.linea; dibujarEsquema(); } });
+  segAlTocar($('#fi-tipo'), v => { fiFiltro.tipo = v; dibujarEsquema(); });
+  $('#fi-buscar').addEventListener('input', debounce(e => { fiFiltro.texto = e.target.value; dibujarEsquema(); }, 180));
+  $('#fi-buscar-lic').addEventListener('input', debounce(e => { fiFiltro.textoLic = e.target.value; dibujarLicencias(); }, 180));
+  $('#fi-bases').addEventListener('click', e => {
+    const f = e.target.closest('[data-f]'); if (f) { abrirFija(fijaPorId[f.dataset.f]); return; }
+    const n = e.target.closest('[data-nueva]');
+    if (n) { const [base, tipo, ingreso, egreso, d] = n.dataset.nueva.split('|'); abrirFija(null, { base, tipo, ingreso, egreso, dias: [Number(d)] }); return; }
+    const nb = e.target.closest('[data-nueva-base]'); if (nb) abrirFija(null, { base: nb.dataset.nuevaBase });
+  });
+  $('#fi-lista-lic').addEventListener('click', e => { const b = e.target.closest('[data-borrar-lic]'); if (b) borrarLicencia(b.dataset.borrarLic, b); });
+  $('#fi-nueva').addEventListener('click', () => abrirFija(null, { linea: fiLinea, tipo: fiFiltro.tipo || undefined }));
+  $('#fi-licencia').addEventListener('click', () => abrirLicencia());
+
+  // ===== Ventana: guardia fija =====
+  let mfFija = null;
+  $('#mf-dias').innerHTML = DIAS_CORTOS.map((d, i) => `<button type="button" data-d="${i}" aria-pressed="false" title="${DIAS[i]}"><b>${LETRA_DIA[i]}</b><small>${d}</small></button>`).join('');
+  $('#mf-turnos').innerHTML = TURNOS_RAPIDOS.map(([a, b]) => `<button type="button" data-t="${a}|${b}">${a === b ? `24 h (${a.slice(0, 2)} a ${b.slice(0, 2)})` : `${a.slice(0, 2)} a ${b.slice(0, 2)}`}</button>`).join('');
+  const diasElegidos = () => $$('#mf-dias button').filter(b => b.getAttribute('aria-pressed') === 'true').map(b => Number(b.dataset.d));
+  const marcarDias = dias => $$('#mf-dias button').forEach(b => b.setAttribute('aria-pressed', String(dias.includes(Number(b.dataset.d)))));
+
+  function abrirFija(f, preset) {
+    const p = preset || {};
+    mfFija = f || null;
+    const puede = puedeFijas();
+    const base = basePorId[f ? f.base : p.base];
+    const linea = base ? base.linea : (p.linea || fiLinea || (lineasActivas()[0] || {}).id);
+    $('#mf-titulo').textContent = f ? (puede ? 'Editar guardia fija' : 'Guardia fija') : 'Nueva guardia fija';
+    $('#mf-linea').innerHTML = cat.lineas.filter(l => l.activo || l.id === linea).map(l => `<option value="${esc(l.id)}" ${l.id === linea ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('');
+    llenarBasesFija(linea, base ? base.id : '');
+    segElegir($('#mf-tipo'), f ? f.tipo : (p.tipo || (base && base.tipo === 'Móvil' ? 'Médico' : 'Médico')));
+    marcarDias(f ? f.dias : (p.dias || []));
+    $('#mf-ing').value = f ? f.ingreso : (p.ingreso || '07:00'); $('#mf-egr').value = f ? f.egreso : (p.egreso || '19:00');
+    llenarTitulares(f ? f.personal : (p.personal || ''));
+    $('#mf-desde').value = f ? f.desde : hoyISO(); $('#mf-hasta').value = f ? (f.hasta || '') : '';
+    $('#mf-baja').classList.toggle('hidden', !(f && puede));
+    $('#mf-guardar').classList.toggle('hidden', !puede);
+    $$('#m-fija .caja-cuerpo input, #m-fija .caja-cuerpo select').forEach(el => { el.disabled = !puede; });
+    ['#mf-tipo', '#mf-turnos', '#mf-dias', '#mf-dias-rapido'].forEach(s => $(s).classList.toggle('bloqueado', !puede));
+    $$('#m-fija .campo.invalido').forEach(c => c.classList.remove('invalido'));
+    actualizarFija();
+    abrirVentana('m-fija');
+  }
+  function llenarBasesFija(linea, sel) {
+    const bases = basesDeLinea(linea, true).filter(b => b.activo || b.id === sel);
+    $('#mf-base').innerHTML = '<option value="">Elegí la base…</option>' + bases.map(b => `<option value="${esc(b.id)}" ${b.id === sel ? 'selected' : ''}>${esc(b.nombre)} · ${esc(b.tipo)}</option>`).join('');
+  }
+  // titulares posibles: el personal activo de ese tipo, con cuántos días fijos tiene ya
+  function llenarTitulares(sel) {
+    const tipo = segValor($('#mf-tipo'));
+    const actual = personaPorId[sel];
+    const lista = cat.personal.filter(p => p.activo && p.tipo === tipo).sort((a, b) => a.apellido.localeCompare(b.apellido, 'es') || a.nombre.localeCompare(b.nombre, 'es'));
+    if (actual && !lista.includes(actual)) lista.unshift(actual);
+    $('#mf-persona').innerHTML = '<option value="">Sin titular (el puesto queda vacante)</option>' + lista.map(p => {
+      const n = diasFijosDe(p.id);
+      return `<option value="${esc(p.id)}" ${p.id === sel ? 'selected' : ''}>${esc(nombrePersona(p))} · ${n ? plural(n, 'día fijo', 'días fijos') : 'sin fijas'}</option>`;
+    }).join('');
+  }
+
+  // Igual que en el script: dos fijas de la misma persona se pisan si algún turno se superpone en la semana
+  function fijasSePisan(a, b) {
+    if ((a.hasta && b.desde && b.desde > a.hasta) || (b.hasta && a.desde && a.desde > b.hasta)) return false;
+    const tramos = f => { const ini = minutos(f.ingreso); let dur = minutos(f.egreso) - ini; if (dur <= 0) dur += 1440; return f.dias.map(d => [d * 1440 + ini, d * 1440 + ini + dur]); };
+    const S = 7 * 1440, tb = tramos(b);
+    return tramos(a).some(([a0, a1]) => tb.some(([b0, b1]) => [-S, 0, S].some(k => a0 < b1 + k && b0 + k < a1)));
+  }
+  const datosFija = () => ({ id: mfFija ? mfFija.id : '', base: $('#mf-base').value, tipo: segValor($('#mf-tipo')), dias: diasElegidos(),
+    ingreso: $('#mf-ing').value, egreso: $('#mf-egr').value, personal: $('#mf-persona').value, desde: $('#mf-desde').value, hasta: $('#mf-hasta').value });
+
+  function actualizarFija() {
+    const d = datosFija();
+    $$('#mf-turnos button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === `${d.ingreso}|${d.egreso}`)));
+    $('#mf-dur').textContent = horaValida(d.ingreso) && horaValida(d.egreso)
+      ? `${String(horasDe(d)).replace('.', ',')} h${minutos(d.egreso) <= minutos(d.ingreso) ? ' · termina al día siguiente' : ''}${d.dias.length ? ` · ${plural(d.dias.length, 'vez', 'veces')} por semana` : ''}` : '';
+    const av = $('#mf-aviso'), p = personaPorId[d.personal];
+    av.classList.remove('hidden');
+    if (!p) { av.className = 'aviso'; av.textContent = 'Sin titular: sus guardias se generan vacantes, para asignarlas una por una.'; return; }
+    const avisos = [];
+    const choque = d.dias.length && horaValida(d.ingreso) && horaValida(d.egreso) ? cat.fijas.find(o => o.id !== d.id && o.personal === p.id && fijasSePisan(d, o)) : null;
+    if (choque) avisos.push(`Se superpone con otra guardia fija suya: ${nombreBase(choque.base)} · ${textoDias(choque.dias)} ${textoHorario(choque)}.`);
+    const total = diasFijosDe(p.id) - (mfFija && mfFija.personal === p.id ? mfFija.dias.length : 0) + d.dias.length;
+    if (total > 6) avisos.push(`Con esta queda con ${total} días fijos por semana.`);
+    const lic = cat.licencias.find(l => l.personal === p.id && l.hasta >= hoyISO());
+    if (lic) avisos.push(`Tiene ${lic.motivo.toLowerCase()} del ${ddmm(lic.desde)} al ${ddmm(lic.hasta)}: esos días quedan vacantes.`);
+    av.className = 'aviso ' + (choque ? 'mal' : avisos.length ? '' : 'ok');
+    av.textContent = avisos.length ? avisos.join(' ') : `${nombrePersona(p)} queda como titular · ${plural(total, 'día fijo', 'días fijos')} por semana en total.`;
+  }
+
+  $('#mf-linea').addEventListener('change', e => llenarBasesFija(e.target.value, ''));
+  segAlTocar($('#mf-tipo'), () => { llenarTitulares($('#mf-persona').value); actualizarFija(); });
+  $('#mf-dias').addEventListener('click', e => {
+    const b = e.target.closest('button[data-d]'); if (!b || $('#mf-dias').classList.contains('bloqueado')) return;
+    b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); actualizarFija();
+  });
+  $('#mf-dias-rapido').addEventListener('click', e => { const b = e.target.closest('[data-dias]'); if (b && puedeFijas()) { marcarDias(b.dataset.dias.split(',').map(Number)); actualizarFija(); } });
+  $('#mf-turnos').addEventListener('click', e => {
+    const b = e.target.closest('button[data-t]'); if (!b || $('#mf-turnos').classList.contains('bloqueado')) return;
+    const [a, c] = b.dataset.t.split('|'); $('#mf-ing').value = a; $('#mf-egr').value = c; actualizarFija();
+  });
+  ['#mf-ing', '#mf-egr', '#mf-persona'].forEach(s => $(s).addEventListener('input', actualizarFija));
+  $('#mf-persona').addEventListener('change', actualizarFija);
+
+  // después de guardar, si la ficha de la persona está abierta se actualiza su esquema
+  const refrescarFicha = () => { if ($('#m-persona').classList.contains('open') && pePersona) pintarEsquemaPersona(personaPorId[pePersona.id]); };
+
+  $('#mf-guardar').addEventListener('click', async e => {
+    const d = datosFija();
+    if (!d.base) return marcarInvalido($('#mf-base'), 'Elegí la base');
+    if (!d.tipo) return marcarInvalido($('#mf-tipo'), 'Elegí el tipo');
+    if (!d.dias.length) return marcarInvalido($('#mf-dias'), 'Elegí al menos un día de la semana');
+    if (!horaValida(d.ingreso)) return marcarInvalido($('#mf-ing'), 'Completá la hora de ingreso');
+    if (!horaValida(d.egreso)) return marcarInvalido($('#mf-egr'), 'Completá la hora de egreso');
+    if (!fechaValida(d.desde)) return marcarInvalido($('#mf-desde'), 'Elegí desde cuándo vale');
+    if (d.hasta && (!fechaValida(d.hasta) || d.hasta < d.desde)) return marcarInvalido($('#mf-hasta'), 'La fecha de fin tiene que ser igual o posterior al inicio');
+    if (!d.id) delete d.id;
+    try {
+      await escribir('guardarFija', { fija: d }, { boton: e.currentTarget, ok: r => `Guardia fija guardada · ${plural(r.creadas, 'guardia armada', 'guardias armadas')} desde hoy` });
+      cerrarVentana('m-fija'); refrescarFicha();
+    } catch {}
+  });
+  $('#mf-baja').addEventListener('click', async e => {
+    const f = mfFija; if (!f) return;
+    const p = personaPorId[f.personal];
+    if (!await confirmar(`¿Dar de baja esta guardia fija?\n${nombreBase(f.base)} · ${f.tipo} · ${textoDias(f.dias)} ${textoHorario(f)}${p ? '\nTitular: ' + nombrePersona(p) : ''}\n\nSe borran sus guardias desde hoy, salvo las que alguien cambió a mano.`, { ok: 'Dar de baja', peligro: true })) return;
+    try {
+      await escribir('bajaFija', { id: f.id }, { boton: e.currentTarget, textoEspera: 'Dando de baja…', ok: r => `Guardia fija dada de baja · se borraron ${plural(r.borradas, 'guardia', 'guardias')}` });
+      cerrarVentana('m-fija'); refrescarFicha();
+    } catch {}
+  });
+
+  // ===== Ventana: licencia =====
+  function abrirLicencia(personaId) {
+    const grupos = TIPOS.map(t => {
+      const gente = cat.personal.filter(p => p.activo && p.tipo === t).sort((a, b) => a.apellido.localeCompare(b.apellido, 'es') || a.nombre.localeCompare(b.nombre, 'es'));
+      return gente.length ? `<optgroup label="${esc(TIPO_PLURAL[t])}">${gente.map(p => `<option value="${esc(p.id)}" ${p.id === personaId ? 'selected' : ''}>${esc(nombrePersona(p))} · Leg. ${esc(p.legajo)}</option>`).join('')}</optgroup>` : '';
+    }).join('');
+    $('#ml-persona').innerHTML = (personaId ? '' : '<option value="">Elegí a la persona…</option>') + grupos;
+    $('#ml-motivo').innerHTML = (cat.motivos || ['Vacaciones', 'Licencia médica', 'Licencia', 'Capacitación', 'Otro']).map(m => `<option>${esc(m)}</option>`).join('');
+    $('#ml-desde').value = hoyISO(); $('#ml-hasta').value = sumarDias(hoyISO(), 6);
+    $$('#m-licencia .campo.invalido').forEach(c => c.classList.remove('invalido'));
+    infoLicencia();
+    abrirVentana('m-licencia');
+  }
+  // cuántas guardias fijas suyas caen en esas fechas (según su esquema) y si choca con otra licencia
+  function infoLicencia() {
+    const av = $('#ml-info'), id = $('#ml-persona').value, desde = $('#ml-desde').value, hasta = $('#ml-hasta').value;
+    if (!id || !fechaValida(desde) || !fechaValida(hasta) || hasta < desde) { av.classList.add('hidden'); return; }
+    av.classList.remove('hidden');
+    const otra = cat.licencias.find(l => l.personal === id && l.desde <= hasta && desde <= l.hasta);
+    if (otra) { av.className = 'aviso mal'; av.textContent = `Ya tiene ${otra.motivo.toLowerCase()} del ${ddmm(otra.desde)} al ${ddmm(otra.hasta)}.`; return; }
+    const fijas = fijasDe(id);
+    let n = 0;
+    for (let f = desde, i = 0; f <= hasta && i < 400; f = sumarDias(f, 1), i++) n += fijas.filter(x => x.dias.includes(diaSemana(f)) && (!x.desde || f >= x.desde) && (!x.hasta || f <= x.hasta)).length;
+    av.className = 'aviso';
+    av.textContent = `${plural(diasEntre(desde, hasta) + 1, 'día', 'días')}. ` + (n ? `Tiene ${plural(n, 'guardia fija', 'guardias fijas')} en esas fechas: quedan vacantes para asignar un reemplazo.` : 'No tiene guardias fijas en esas fechas.') +
+      ' Si tiene otras guardias asignadas en esas fechas, también quedan vacantes.';
+  }
+  ['#ml-persona', '#ml-desde', '#ml-hasta'].forEach(s => $(s).addEventListener('change', infoLicencia));
+  $('#ml-guardar').addEventListener('click', async e => {
+    const d = { personal: $('#ml-persona').value, motivo: $('#ml-motivo').value, desde: $('#ml-desde').value, hasta: $('#ml-hasta').value };
+    if (!d.personal) return marcarInvalido($('#ml-persona'), 'Elegí a la persona');
+    if (!fechaValida(d.desde)) return marcarInvalido($('#ml-desde'), 'Elegí desde cuándo');
+    if (!fechaValida(d.hasta) || d.hasta < d.desde) return marcarInvalido($('#ml-hasta'), 'La fecha de fin tiene que ser igual o posterior al inicio');
+    try {
+      await escribir('guardarLicencia', { licencia: d }, { boton: e.currentTarget, ok: r => `Licencia cargada${r.liberadas ? ` · ${plural(r.liberadas, 'guardia quedó vacante', 'guardias quedaron vacantes')}` : ''}` });
+      cerrarVentana('m-licencia'); refrescarFicha();
+    } catch {}
+  });
+
+  // ===== En la ficha de la persona: su semana fija y sus licencias =====
+  function pintarEsquemaPersona(p) {
+    const caja = $('#mp-esquema');
+    caja.classList.toggle('hidden', !p);
+    if (!p) return;
+    const hoy = hoyISO(), puede = puedeFijas();
+    const fijas = fijasDe(p.id).slice().sort((a, b) => Math.min(...a.dias) - Math.min(...b.dias) || a.ingreso.localeCompare(b.ingreso));
+    const lics = cat.licencias.filter(l => l.personal === p.id && l.hasta >= hoy).sort((a, b) => a.desde.localeCompare(b.desde));
+    const semana = DIAS_CORTOS.map((d, i) => {
+      const del = fijas.filter(f => f.dias.includes(i));
+      return `<span class="${del.length ? 'on' : ''}" title="${esc(del.map(f => `${textoHorario(f)} · ${nombreBase(f.base)}`).join('\n') || 'Libre')}"><b>${d}</b>${del.map(f => `<small>${esc(textoHorario(f))}</small>`).join('') || '<small>—</small>'}</span>`;
+    }).join('');
+    caja.innerHTML = `<div class="fe-cab"><b>Guardias fijas</b><small>${plural(diasFijosDe(p.id), 'día', 'días')} por semana</small>${puede ? '<button type="button" class="btn chico" data-fe-nueva>+ Agregar</button>' : ''}</div>
+      <div class="semana-mini">${semana}</div>
+      ${fijas.map(f => `<button type="button" class="fe-fila" data-f="${esc(f.id)}"><b>${esc(textoDias(f.dias))} · ${esc(textoHorario(f))}</b><small>${esc(nombreBase(f.base))} · ${esc(nombreLinea(f.linea))}</small></button>`).join('') || '<p class="ayuda sin-mt">No tiene guardias fijas.</p>'}
+      <div class="fe-cab"><b>Licencias</b>${puede ? '<button type="button" class="btn chico" data-fe-lic>+ Licencia</button>' : ''}</div>
+      ${lics.map(l => `<div class="fe-fila lic"><b>${esc(l.motivo)}</b><small>Del ${ddmmaaaa(l.desde)} al ${ddmmaaaa(l.hasta)}${l.desde <= hoy ? ' · en curso' : ''}</small>${puede ? `<button type="button" class="link" data-borrar-lic="${esc(l.id)}">Borrar</button>` : ''}</div>`).join('') || '<p class="ayuda sin-mt">Sin licencias en curso ni próximas.</p>'}`;
+  }
+  $('#mp-esquema').addEventListener('click', async e => {
+    const p = pePersona; if (!p) return;
+    const f = e.target.closest('[data-f]'); if (f) { abrirFija(fijaPorId[f.dataset.f]); return; }
+    if (e.target.closest('[data-fe-nueva]')) { abrirFija(null, { personal: p.id, tipo: p.tipo }); return; }
+    if (e.target.closest('[data-fe-lic]')) { abrirLicencia(p.id); return; }
+    const b = e.target.closest('[data-borrar-lic]'); if (b && await borrarLicencia(b.dataset.borrarLic, null)) refrescarFicha();
+  });
+
   // ===== Arranque (va siempre último) =====
   // Con sesión guardada se entra directo y se valida por detrás; sin sesión, pantalla de ingreso.
   async function arrancarApp() {
@@ -2068,8 +2591,7 @@
     let guardado = null; try { guardado = JSON.parse(localStorage.getItem('catalogo') || 'null'); } catch {}
     if (guardado && guardado.usuario && guardado.usuario.id === sesion.id) {
       cat = guardado; permisos = guardado.permisos || {};
-      lineaPorId = {}; basePorId = {}; personaPorId = {};
-      cat.lineas.forEach(l => { lineaPorId[l.id] = l; }); cat.bases.forEach(b => { basePorId[b.id] = b; }); cat.personal.forEach(p => { personaPorId[p.id] = p; });
+      indexarCatalogo();
     }
     try { await cargarCatalogo(); }
     catch (e) {
