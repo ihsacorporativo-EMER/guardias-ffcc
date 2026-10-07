@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B3A5C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Guardias FFCC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B3A5C'/%3E%3Cg fill='none' stroke='%23F0A500' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='17' y='11' width='30' height='32' rx='7'/%3E%3Cpath d='M17 28h30M32 11v17M24 53l4-9M40 53l-4-9'/%3E%3C/g%3E%3C/svg%3E">
+<title>Guardias FFCC · Coordinación</title>
+<!-- el tema elegido se aplica antes de dibujar, así no parpadea; sin elección, sigue al sistema -->
+<script>try{var t=localStorage.getItem('tema');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Colores (paleta del Sistema de Guardias FFCC: azul institucional y dorado) ===== */
+  :root{
+    --brand:#1B3A5C; --brand-2:#2E7D9B; --brand-deep:#0f2740; --brand-txt:#1B3A5C;
+    --accent:#F0A500; --accent-deep:#c88700; --accent-ink:#2b1e00;
+    --bg:#eef2f7; --card:#ffffff; --soft:#f5f8fc; --ink:#15233a; --muted:#5d6b80; --line:#dbe2ec; --field:#ffffff;
+    --ok:#1f8a4c; --ok-bg:#e2f4e9; --ok-line:#a9dbbd;
+    --danger:#c62828; --danger-bg:#fdeceb; --danger-line:#f1b4b0;
+    --warn:#9a5b00; --warn-bg:#fff3d6;
+    --t-med:#2E7D9B; --t-enf:#7C3AED; --t-cho:#D97706;
+    --shadow:0 1px 2px rgba(15,39,64,.06),0 10px 30px -16px rgba(15,39,64,.28);
+    --shadow-lg:0 24px 60px -20px rgba(15,39,64,.45);
+    --r:14px;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --brand:#24507e; --brand-deep:#0b1d31; --brand-txt:#8fc1ff;
+      --bg:#0d131c; --card:#151d29; --soft:#1a2432; --ink:#e8eef6; --muted:#9aa8bc; --line:#263346; --field:#1a2331;
+      --ok:#4cc985; --ok-bg:rgba(76,201,133,.13); --ok-line:rgba(76,201,133,.35);
+      --danger:#ff7a72; --danger-bg:rgba(255,122,114,.12); --danger-line:rgba(255,122,114,.4);
+      --warn:#ffc35a; --warn-bg:rgba(240,165,0,.14);
+      --t-med:#5fb8d6; --t-enf:#a98bff; --t-cho:#ffae4d;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --brand:#24507e; --brand-deep:#0b1d31; --brand-txt:#8fc1ff;
+    --bg:#0d131c; --card:#151d29; --soft:#1a2432; --ink:#e8eef6; --muted:#9aa8bc; --line:#263346; --field:#1a2331;
+    --ok:#4cc985; --ok-bg:rgba(76,201,133,.13); --ok-line:rgba(76,201,133,.35);
+    --danger:#ff7a72; --danger-bg:rgba(255,122,114,.12); --danger-line:rgba(255,122,114,.4);
+    --warn:#ffc35a; --warn-bg:rgba(240,165,0,.14);
+    --t-med:#5fb8d6; --t-enf:#a98bff; --t-cho:#ffae4d;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  }
+  button,input,select,textarea{font:inherit;color:inherit}
+  svg{flex:none}
+  h1{font-size:26px;line-height:1.15;margin:0 0 4px;font-weight:800;letter-spacing:-.2px}
+  h3{margin:0;font-size:15px;font-weight:800}
+  .lead{margin:0;color:var(--muted)}
+  .hidden{display:none !important}
+  .ayuda{display:block;font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  .ayuda.centro{text-align:center}
+  .sin-mt{margin-top:0}
+  .opt{color:var(--muted);font-weight:500}
+  .relleno{flex:1}
+  /* hasta que la app decide si hay sesión, no se dibuja nada */
+  body.cargando .barra,body.cargando main,body.cargando .bnav{visibility:hidden}
+
+  /* ===== Barra: en celular es la cabecera de arriba; desde 641 px, la barra lateral ===== */
+  .barra{
+    background:linear-gradient(165deg,var(--brand) 0%,var(--brand-deep) 100%);color:#fff;
+    display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+    position:sticky;top:0;z-index:20;
+  }
+  .marca{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+  .logo{width:38px;height:38px;border-radius:11px;background:#fff;color:var(--brand);display:grid;place-items:center;flex:none;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+  .logo svg{width:24px;height:24px}
+  .logo.grande{width:52px;height:52px;border-radius:15px}
+  .logo.grande svg{width:32px;height:32px}
+  .titulo{min-width:0;line-height:1.2}
+  .titulo b{display:block;font-size:16px;font-weight:800;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .titulo small{display:block;font-size:12px;opacity:.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav,.cuenta,.nav-sec{display:none}
+  .nav .solo-tecnica{display:none !important}
+
+  .acciones-top{display:flex;align-items:center;gap:6px;flex:none}
+  .conexion{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#d9f5e6}
+  .conexion i{width:9px;height:9px;border-radius:50%;background:#34d27b;box-shadow:0 0 0 3px rgba(52,210,123,.22)}
+  .conexion.off{color:#ffd0cc}
+  .conexion.off i{background:#ff5a52;box-shadow:0 0 0 3px rgba(255,90,82,.25)}
+  #conexion-txt{display:none}
+  .icono{width:40px;height:40px;border:0;border-radius:11px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}
+  .icono svg{width:20px;height:20px}
+  .icono:hover{background:color-mix(in srgb,currentColor 12%,transparent)}
+  #btn-tema .sol{display:none}
+  :root[data-theme="dark"] #btn-tema .sol{display:block}
+  :root[data-theme="dark"] #btn-tema .luna{display:none}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) #btn-tema .sol{display:block}
+    :root:not([data-theme="light"]) #btn-tema .luna{display:none}
+  }
+
+  /* ===== Barra de abajo (celular) ===== */
+  .bnav{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;position:fixed;left:0;right:0;bottom:0;z-index:20;
+    height:calc(62px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);
+    box-shadow:0 -8px 24px -18px rgba(0,0,0,.35)}
+  .bnav button{border:0;background:none;color:var(--muted);font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .bnav button svg{width:22px;height:22px}
+  .bnav button[aria-selected="true"]{color:var(--brand-txt)}
+  .bnav button[aria-selected="true"]::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:var(--accent)}
+  .bcnt{position:absolute;top:6px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--danger);color:#fff;font-size:10.5px;font-style:normal;font-weight:800;display:grid;place-items:center}
+  .bcnt:empty{display:none}
+
+  /* ===== Contenido ===== */
+  main{padding:16px 14px calc(90px + env(safe-area-inset-bottom));max-width:1600px}
+  .pie{margin:34px 0 0;font-size:12px;color:var(--muted);text-align:center}
+
+  /* ===== Computadora y tablet ===== */
+  @media (min-width:641px){
+    :root{--sb:76px}
+    .barra{position:fixed;left:0;top:0;bottom:0;width:var(--sb);flex-direction:column;align-items:stretch;gap:6px;padding:16px 10px 14px;overflow-y:auto;overflow-x:hidden}
+    .marca{flex:none;justify-content:center}
+    .titulo{display:none}
+    .nav{display:flex;flex-direction:column;gap:4px;margin-top:18px}
+    .nav button{display:flex;align-items:center;justify-content:center;gap:12px;height:46px;padding:0 12px;border:0;border-radius:12px;background:transparent;color:#dbe6f5;font-size:15px;font-weight:700;cursor:pointer;position:relative;text-align:left}
+    .nav button svg{width:22px;height:22px}
+    .nav button span{display:none}
+    .nav button:hover{background:rgba(255,255,255,.1)}
+    .nav button[aria-selected="true"]{background:#fff;color:var(--brand)}
+    :root[data-theme="dark"] .nav button[aria-selected="true"]{background:#e8eef6;color:#0f2740}
+    .nav .cnt{position:absolute;top:5px;right:8px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-style:normal;font-weight:800;display:grid;place-items:center}
+    .nav .cnt:empty{display:none}
+    .cuenta{display:flex;flex-direction:column;gap:8px;margin-top:auto;padding:10px 6px;border-radius:14px;background:rgba(3,14,30,.35);border:1px solid rgba(255,255,255,.1)}
+    .cuenta-fila{display:flex;justify-content:center}
+    .cuenta-txt{display:none}
+    .cuenta-acc{display:flex;flex-direction:column;gap:2px}
+    .cuenta-acc button{display:flex;align-items:center;justify-content:center;gap:10px;height:36px;border:0;border-radius:9px;background:transparent;color:#dbe6f5;font-size:13px;font-weight:600;cursor:pointer}
+    .cuenta-acc button:hover{background:rgba(255,255,255,.1)}
+    .cuenta-acc button svg{width:18px;height:18px}
+    .cuenta-acc button span{display:none}
+    .cuenta-acc .salir{color:#ffcfc8}
+    .cuenta .avatar{box-shadow:0 0 0 2px #34d27b}
+    .cuenta.off .avatar{box-shadow:0 0 0 2px #ff5a52}
+    .acciones-top{position:fixed;top:14px;right:20px;z-index:15;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:13px;padding:3px 3px 3px 12px;box-shadow:var(--shadow)}
+    .conexion{color:var(--ok)}
+    .conexion.off{color:var(--danger)}
+    #conexion-txt{display:inline}
+    .bnav{display:none !important}
+    main{margin-left:var(--sb);padding:22px 24px 40px 26px}
+    .pie{text-align:left}
+  }
+  /* pantalla ancha: la barra muestra los textos */
+  @media (min-width:1100px){
+    :root{--sb:236px}
+    .barra{padding:18px 14px 14px}
+    .marca{justify-content:flex-start;padding:0 4px}
+    .titulo{display:block}
+    .titulo b{font-size:15px}
+    .nav button{justify-content:flex-start}
+    .nav button span{display:inline}
+    .nav .cnt{position:static;margin-left:auto}
+    .nav-sec{display:block;padding:16px 12px 4px;font-size:11.5px;font-weight:800;color:#a9bdd8;letter-spacing:.7px;text-transform:uppercase}
+    .nav-sec.hidden{display:none}
+    .cuenta{padding:12px}
+    .cuenta-fila{justify-content:flex-start;align-items:center;gap:10px}
+    .cuenta-txt{display:block;min-width:0;line-height:1.25}
+    .cuenta-txt b{display:block;font-size:14px;overflow-wrap:anywhere}
+    .cuenta-txt small{display:block;font-size:12px;color:#b9c8ea}
+    .cuenta-acc button{justify-content:flex-start;padding:0 10px}
+    .cuenta-acc button span{display:inline}
+  }
+  /* ingreso: sin barras */
+  body.en-login .barra,body.en-login .bnav,body.en-login .pie{display:none !important}
+  body.en-login main{margin:0 auto;padding:0}
+
+  /* ===== Cabecera de cada pantalla ===== */
+  .cab{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 16px}
+  @media (min-width:641px){.cab{padding-right:190px;min-height:46px}}
+  .cab-acc{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* ===== Botones ===== */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:8px 14px;border-radius:11px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;
+    transition:background .15s,border-color .15s,transform .05s}
+  .btn svg{width:17px;height:17px}
+  .btn:hover{border-color:color-mix(in srgb,var(--brand-txt) 40%,var(--line))}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.55;cursor:progress}
+  .btn.primario{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 6px 16px -8px rgba(240,165,0,.8)}
+  .btn.primario:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+  .btn.peligro{background:var(--danger);border-color:var(--danger);color:#fff}
+  .btn.peligro-suave{color:var(--danger);border-color:var(--danger-line);background:transparent}
+  .btn.peligro-suave:hover{background:var(--danger-bg)}
+  .btn.chico{min-height:34px;padding:5px 11px;font-size:13px;border-radius:9px}
+  .btn.ancho{width:100%;min-height:48px;font-size:16px}
+  .link{border:0;background:none;padding:0;color:var(--brand-txt);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ===== Chips y segmentados ===== */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .chips button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13.5px;cursor:pointer}
+  .chips button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+  .seg{display:inline-flex;background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;border-radius:8px;padding:6px 11px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .seg.ancho{display:flex;width:100%}
+  .seg.ancho button{flex:1;padding:9px 6px;font-size:14px}
+  .seg.ancho button[aria-pressed="true"]{background:var(--brand);color:#fff}
+  .seg:disabled,.seg.bloqueado{pointer-events:none;opacity:.7}
+
+  /* ===== Campos ===== */
+  .campo{margin-bottom:14px;min-width:0}
+  .campo.sin-mb{margin-bottom:0}
+  .campo > label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px}
+  .campo > label.sub{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px}
+  .campo input,.campo select,.campo textarea,.buscar,.rango input{
+    width:100%;background:var(--field);border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;min-height:44px;font-size:15px}
+  .campo textarea{min-height:64px;resize:vertical}
+  .campo input:focus,.campo select:focus,.campo textarea:focus,.buscar:focus{outline:none;border-color:var(--brand-2);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand-2) 22%,transparent)}
+  .campo.invalido input,.campo.invalido select,.campo.invalido .seg{border-color:var(--danger);box-shadow:0 0 0 3px color-mix(in srgb,var(--danger) 18%,transparent)}
+  .campo.invalido > label{color:var(--danger)}
+  .campo input:disabled,.campo select:disabled,.campo textarea:disabled{opacity:.75;cursor:not-allowed}
+  .fila2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:420px){.fila2{grid-template-columns:1fr}}
+  .buscar{min-height:38px;padding:7px 12px;font-size:14px;border-radius:10px}
+  .color-fila{display:flex;align-items:center;gap:12px}
+  .color-fila input{width:56px !important;height:44px;padding:4px !important}
+
+  /* ===== Paneles, KPIs y etiquetas ===== */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);min-width:0}
+  .panel-cab{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .panel-cab small{color:var(--muted);font-size:12px;font-weight:600}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 14px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--brand-2)}
+  .kpi.ok::before{background:var(--ok)}
+  .kpi.mal::before{background:var(--danger)}
+  .kpi.acento::before{background:var(--accent)}
+  .kpi b{display:block;font-size:28px;line-height:1.1;font-weight:800;letter-spacing:-.5px}
+  .kpi span{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin-top:4px}
+  .kpi small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+  .pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:800;white-space:nowrap;background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+  .pill.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-line)}
+  .pill.mal{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-line)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+  .pill.t-Médico{color:var(--t-med);border-color:color-mix(in srgb,var(--t-med) 40%,transparent);background:color-mix(in srgb,var(--t-med) 10%,transparent)}
+  .pill.t-Enfermero{color:var(--t-enf);border-color:color-mix(in srgb,var(--t-enf) 40%,transparent);background:color-mix(in srgb,var(--t-enf) 10%,transparent)}
+  .pill.t-Chofer{color:var(--t-cho);border-color:color-mix(in srgb,var(--t-cho) 40%,transparent);background:color-mix(in srgb,var(--t-cho) 10%,transparent)}
+  .avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:13px;font-weight:800;background:#e6ebf5;color:var(--brand)}
+  .avatar.grande{width:52px;height:52px;font-size:17px}
+  .avatar.t-Médico{background:color-mix(in srgb,var(--t-med) 16%,var(--card));color:var(--t-med)}
+  .avatar.t-Enfermero{background:color-mix(in srgb,var(--t-enf) 16%,var(--card));color:var(--t-enf)}
+  .avatar.t-Chofer{background:color-mix(in srgb,var(--t-cho) 16%,var(--card));color:var(--t-cho)}
+
+  /* ===== Listas de filas (personal, usuarios, historial) ===== */
+  .lista{display:flex;flex-direction:column;gap:8px}
+  .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);min-width:0}
+  .item.baja{opacity:.62}
+  .item .datos{flex:1;min-width:0}
+  .item .datos > b{display:block;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .datos > small{display:block;color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .etiquetas{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .item .acc{display:flex;gap:6px;align-items:center;flex:none}
+  .item.clic{cursor:pointer}
+  .item.clic:hover{border-color:color-mix(in srgb,var(--brand-txt) 35%,var(--line))}
+  .vacio{text-align:center;color:var(--muted);padding:34px 16px;border:1.5px dashed var(--line);border-radius:var(--r);background:color-mix(in srgb,var(--card) 60%,transparent)}
+  .vacio b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+
+  /* ===== Herramientas (filtros) ===== */
+  .herramientas{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+  .filtros{display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex:1;justify-content:flex-end}
+  .filtros .buscar{width:auto;flex:1;min-width:180px;max-width:300px}
+
+  /* ===== Indicador "Cargando…" ===== */
+  .sync{display:none;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted);margin:0 0 10px}
+  .sync.on{display:flex}
+  .spin{width:15px;height:15px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--brand-2);animation:girar .8s linear infinite}
+  @keyframes girar{to{transform:rotate(360deg)}}
+  .esqueleto{height:56px;border-radius:12px;background:linear-gradient(90deg,var(--card),var(--soft),var(--card));background-size:200% 100%;animation:brillo 1.2s infinite;border:1px solid var(--line)}
+  @keyframes brillo{to{background-position:-200% 0}}
+
+  /* ===== Ventanas ===== */
+  .modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(8,18,32,.55);backdrop-filter:blur(3px)}
+  .modal.open{display:flex;animation:aparecer .18s ease}
+  .caja{width:100%;max-width:560px;max-height:calc(100vh - 32px);display:flex;flex-direction:column;background:var(--card);border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow-lg);animation:subir .22s cubic-bezier(.2,.8,.2,1)}
+  .caja.chica{max-width:440px}
+  .caja-cab{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:16px 16px 8px 20px}
+  .caja-cab h3{font-size:18px}
+  .caja-cab small{display:block;color:var(--muted);font-size:12.5px;font-weight:600;margin-top:2px}
+  .caja-cuerpo{padding:8px 20px 6px;overflow-y:auto}
+  .caja-pie{display:flex;align-items:center;gap:8px;padding:12px 16px 16px;border-top:1px solid var(--line)}
+  .meta{font-size:12px;color:var(--muted);margin:0}
+  .modal.confirmar .caja-cuerpo{padding-top:22px;text-align:center}
+  .modal.confirmar p{white-space:pre-line;margin:10px 0 8px;font-size:15px}
+  .cf-ico{width:46px;height:46px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--brand-2) 14%,var(--card));color:var(--brand-2)}
+  .cf-ico svg{width:26px;height:26px}
+  .modal.confirmar.peligro .cf-ico{background:var(--danger-bg);color:var(--danger)}
+  .modal.confirmar.peligro #cf-si{background:var(--danger);border-color:var(--danger);color:#fff;box-shadow:none}
+  .codigo-grande{display:block;font-size:30px;font-weight:800;letter-spacing:4px;margin:8px 0;color:var(--ink)}
+  @media (max-width:640px){
+    .modal{align-items:flex-end;padding:0}
+    .caja{max-width:none !important;border-radius:18px 18px 0 0;max-height:94vh;padding-bottom:env(safe-area-inset-bottom)}
+  }
+
+  /* ===== Avisos ===== */
+  .aviso{margin-top:8px;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:600;background:var(--warn-bg);color:var(--warn)}
+  .aviso.ok{background:var(--ok-bg);color:var(--ok)}
+  .aviso.mal{background:var(--danger-bg);color:var(--danger)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);z-index:90;
+    background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;
+    opacity:0;transition:.25s;pointer-events:none;max-width:min(92vw,520px);text-align:center;box-shadow:var(--shadow-lg)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.ok{background:var(--ok);color:#fff}
+  .toast.err{background:var(--danger);color:#fff}
+  @media (max-width:640px){.toast{bottom:calc(76px + env(safe-area-inset-bottom))}}
+
+  @keyframes aparecer{from{opacity:0}to{opacity:1}}
+  @keyframes subir{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .vista{animation:subir .3s cubic-bezier(.2,.8,.2,1)}
+
+  /* ===== Guardias: pestañas de línea, navegación de semana y grilla ===== */
+  .lineas-tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;margin:0 0 10px;scrollbar-width:thin}
+  .lineas-tabs button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;color:var(--ink)}
+  .lineas-tabs button i{width:10px;height:10px;border-radius:50%;background:var(--c,#999)}
+  .lineas-tabs button small{font-weight:700;color:var(--muted);font-size:12px}
+  .lineas-tabs button[aria-selected="true"]{border-color:var(--c);box-shadow:inset 0 -3px 0 var(--c),var(--shadow)}
+  .lineas-tabs button small.mal{color:var(--danger)}
+
+  .semana-nav{display:flex;align-items:center;gap:4px}
+  .semana-nav .icono{color:var(--ink);border:1px solid var(--line);background:var(--card);width:38px;height:38px}
+  .semana-txt{position:relative;display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid var(--line);border-radius:11px;background:var(--card);font-weight:800;font-size:14.5px;cursor:pointer;white-space:nowrap}
+  .semana-txt input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+  .semana-txt input::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+
+  .resumen-semana{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .resumen-semana .pill{font-size:12.5px;padding:4px 11px}
+
+  .grilla-wrap{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card);box-shadow:var(--shadow);max-height:calc(100vh - 250px)}
+  .grilla{border-collapse:separate;border-spacing:0;width:100%;min-width:1060px;table-layout:fixed}
+  .grilla th,.grilla td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:top}
+  .grilla thead th{position:sticky;top:0;z-index:3;background:var(--soft);padding:8px 8px 7px;text-align:left;font-size:12px;color:var(--muted);font-weight:800}
+  .grilla thead th b{display:block;font-size:17px;color:var(--ink);line-height:1.1}
+  .grilla thead th .cob{display:block;margin-top:4px;height:4px;border-radius:2px;background:var(--danger-bg);overflow:hidden}
+  .grilla thead th .cob i{display:block;height:100%;background:var(--ok)}
+  .grilla thead th small{display:block;font-weight:700;margin-top:3px}
+  .grilla thead th.hoy{background:color-mix(in srgb,var(--accent) 16%,var(--soft))}
+  .grilla thead th.hoy b{color:var(--accent-deep)}
+  .grilla .col-base{position:sticky;left:0;z-index:2;width:170px;background:var(--card);padding:10px 10px;text-align:left}
+  .grilla thead .col-base{z-index:4;background:var(--soft)}
+  .grilla tbody .col-base b{display:block;font-size:13.5px;line-height:1.25}
+  .grilla tbody .col-base small{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:11.5px;font-weight:700;margin-top:3px}
+  .grilla td{padding:5px;background:var(--card)}
+  .grilla td.hoy{background:color-mix(in srgb,var(--accent) 5%,var(--card))}
+  .grilla td .celda{display:flex;flex-direction:column;gap:4px;min-height:44px}
+  .grilla td .mas{border:1.5px dashed var(--line);background:transparent;border-radius:8px;color:var(--muted);font-size:12px;font-weight:700;padding:3px;cursor:pointer;opacity:0;transition:opacity .15s}
+  .grilla td:hover .mas,.grilla td .mas:focus{opacity:1}
+  .grilla td .mas:hover{border-color:var(--brand-2);color:var(--brand-txt)}
+
+  /* una guardia */
+  .g{display:block;width:100%;text-align:left;border:1px solid var(--ok-line);border-left:4px solid var(--tc,var(--brand-2));background:var(--ok-bg);border-radius:8px;padding:4px 7px 5px;cursor:pointer;color:var(--ink);font-size:12px;line-height:1.25}
+  .g:hover{filter:brightness(.97);box-shadow:0 2px 8px -3px rgba(0,0,0,.3)}
+  .g.t-Médico{--tc:var(--t-med)} .g.t-Enfermero{--tc:var(--t-enf)} .g.t-Chofer{--tc:var(--t-cho)}
+  .g-top{display:flex;align-items:center;gap:5px}
+  .g-tipo{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.4px;color:var(--tc)}
+  .g-hora{font-weight:800;font-size:11.5px;color:var(--muted)}
+  .g-nom{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+  .g-obs{float:right;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:4px}
+  .g.vac{background:var(--danger-bg);border-color:var(--danger-line);border-left-color:var(--danger);border-style:dashed;border-left-style:solid}
+  .g.vac .g-nom{color:var(--danger);font-weight:800;letter-spacing:.3px}
+  .g.filtrada{display:none}
+  .g.resaltada{outline:2px solid var(--accent);outline-offset:1px}
+
+  /* ===== Celular: tira de días y lista por base ===== */
+  .dias-cel{display:none}
+  @media (max-width:640px){
+    .dias-cel{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:0 0 12px}
+    .dias-cel button{border:1px solid var(--line);background:var(--card);border-radius:11px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;color:var(--ink)}
+    .dias-cel button small{font-size:10.5px;font-weight:800;color:var(--muted);text-transform:uppercase}
+    .dias-cel button b{font-size:16px}
+    .dias-cel button i{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+    .dias-cel button i.mal{background:var(--danger)}
+    .dias-cel button.hoy b{color:var(--accent-deep)}
+    .dias-cel button[aria-selected="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+    .dias-cel button[aria-selected="true"] small{color:#cfe0f5}
+    .dias-cel button[aria-selected="true"] b{color:#fff}
+    .grilla-wrap{display:none}
+    .base-cel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+    .base-cel-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .base-cel-cab b{font-size:14.5px}
+    .base-cel .lista-g{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .base-cel .g{font-size:13px;padding:6px 8px}
+    .herramientas .filtros{justify-content:flex-start}
+    .filtros .seg{overflow-x:auto;max-width:100%}
+    .filtros .buscar{max-width:none;min-width:0;width:100%;flex-basis:100%}
+    .semana-nav{width:100%}
+    .semana-txt{flex:1;min-width:0;justify-content:center;font-size:13.5px;padding:0 8px;overflow:hidden}
+    .semana-nav .icono{flex:none}
+  }
+
+  /* ===== Ingreso ===== */
+  .login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
+    background:radial-gradient(ellipse at 15% 0%,color-mix(in srgb,var(--brand-2) 22%,transparent),transparent 55%),
+               radial-gradient(ellipse at 90% 100%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 50%),var(--bg)}
+  .login-caja{width:100%;max-width:420px}
+  .login-marca{display:flex;align-items:center;gap:14px;margin:0 0 18px}
+  .login-marca .logo{background:var(--brand);color:#fff}
+  .login-marca b{display:block;font-size:20px;font-weight:800}
+  .login-marca small{display:block;color:var(--muted);font-weight:600}
+  .login .panel{padding:24px 22px;border-radius:18px}
+  .login h1{font-size:24px}
+  .login .lead{margin-bottom:18px}
+  .login-pie{margin-top:18px}
+
+  /* ===== Inicio ===== */
+  .rango{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+  .rango label{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px}
+  .rango input{width:auto;min-height:38px;padding:6px 10px}
+  .grid-ini{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  @media (min-width:1100px){.grid-ini{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-ini .ancho2{grid-column:span 2}}
+  .lineas-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+  .linea-card{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);cursor:pointer;color:var(--ink);border-top:3px solid var(--c)}
+  .linea-card:hover{box-shadow:var(--shadow)}
+  .anillo{--p:0;width:58px;height:58px;border-radius:50%;flex:none;display:grid;place-items:center;
+    background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--danger-bg) 0)}
+  .anillo span{width:44px;height:44px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:13px;font-weight:800}
+  .linea-card b{display:block;font-size:15px}
+  .linea-card small{display:block;color:var(--muted);font-size:12px;font-weight:600}
+  .linea-card small.mal{color:var(--danger)}
+  .barras{display:flex;flex-direction:column;gap:10px}
+  .barra-fila{display:grid;grid-template-columns:minmax(90px,140px) 1fr auto;gap:10px;align-items:center;font-size:13px}
+  .barra-fila em{font-style:normal;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .barra-fila .pista{height:10px;border-radius:5px;background:var(--danger-bg);overflow:hidden}
+  .barra-fila .pista i{display:block;height:100%;border-radius:5px;background:var(--ok)}
+  .barra-fila .pista.solo i{background:var(--danger)}
+  .barra-fila .pista.solo{background:var(--soft)}
+  .barra-fila span{font-weight:800;font-size:12.5px;white-space:nowrap}
+  .vacante-fila{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .vacante-fila:last-child{border-bottom:0}
+  .vacante-fila .cuando{flex:none;width:76px;font-weight:800;line-height:1.2}
+  .vacante-fila .cuando small{display:block;color:var(--muted);font-weight:700;font-size:11.5px}
+  .vacante-fila .que{flex:1;min-width:0}
+  .vacante-fila .que b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vacante-fila .que small{color:var(--muted);font-weight:600}
+  .lista-scroll{max-height:330px;overflow-y:auto;padding-right:4px}
+  .dias-barras{display:flex;align-items:flex-end;gap:4px;height:120px;padding-top:6px}
+  .dias-barras .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;height:100%;justify-content:flex-end}
+  .dias-barras .col i{display:block;width:100%;max-width:26px;border-radius:5px 5px 2px 2px;background:var(--ok);min-height:3px}
+  .dias-barras .col i.medio{background:var(--accent)}
+  .dias-barras .col i.mal{background:var(--danger)}
+  .dias-barras .col small{font-size:10.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+
+  /* ===== Ventana de guardia: turnos rápidos y búsqueda de personal ===== */
+  .turnos{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+  .turnos button{border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink)}
+  .turnos button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+  .autoc{position:relative}
+  .autoc input{padding-right:42px !important}
+  .autoc .limpiar{position:absolute;right:3px;top:2px;color:var(--muted)}
+  .sugerencias{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);max-height:270px;overflow-y:auto;padding:4px}
+  .sugerencias .sec{padding:6px 10px 2px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .sug{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;text-align:left;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--ink)}
+  .sug:hover,.sug.activa{background:var(--soft)}
+  .sug .avatar{width:30px;height:30px;font-size:11px}
+  .sug .datos{flex:1;min-width:0}
+  .sug .datos b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sug .datos small{display:block;color:var(--muted);font-size:11.5px}
+  .sug mark{background:color-mix(in srgb,var(--accent) 35%,transparent);color:inherit;border-radius:3px}
+
+  /* ===== Líneas y bases ===== */
+  .grid-bases{columns:330px;column-gap:14px}
+  .linea-panel{border-top:4px solid var(--c);break-inside:avoid;margin:0 0 14px}
+  .linea-panel .panel-cab{align-items:center}
+  .linea-panel .panel-cab h3{display:flex;align-items:center;gap:8px;font-size:16px}
+  .linea-panel .panel-cab h3 i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+  .base-fila{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .base-fila:last-of-type{border-bottom:0}
+  .base-fila.baja{opacity:.55}
+  .base-fila .datos{flex:1;min-width:0}
+  .base-fila .datos b{display:block;font-size:14px}
+  .base-fila .datos small{display:block;color:var(--muted);font-size:12px}
+  .base-fila .acc{display:flex;gap:4px}
+
+  /* ===== Usuarios ===== */
+  .crear-usuario{margin:0 0 16px}
+  .fila-crear{display:grid;grid-template-columns:1fr 1fr 170px auto;gap:10px;align-items:end}
+  .fila-crear .campo{margin:0}
+  .fila-crear .btn{min-height:44px}
+  @media (max-width:760px){.fila-crear{grid-template-columns:1fr 1fr}.fila-crear .btn{grid-column:1/-1}}
+  .roles-ayuda{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+  .roles-ayuda div{font-size:12.5px;color:var(--muted);background:var(--soft);border-radius:10px;padding:8px 10px}
+  .roles-ayuda b{color:var(--ink)}
+  .item select{min-height:36px;padding:5px 8px;border-radius:9px;border:1px solid var(--line);background:var(--field);font-weight:700;font-size:13px}
+
+  /* ===== Historial ===== */
+  .evento{display:grid;grid-template-columns:130px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13px}
+  .evento .cuando{color:var(--muted);font-weight:700;font-size:12px;line-height:1.35}
+  .evento b{font-size:13.5px}
+  .evento .det{color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+  @media (max-width:640px){.evento{grid-template-columns:1fr;gap:2px}}
+
+  /* ===== Más (celular) ===== */
+  #v-mas{display:flex;flex-direction:column;gap:12px}
+  #v-mas.hidden{display:none}
+  .mas-cuenta{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--shadow)}
+  .mas-cuenta b{display:block;font-size:16px}
+  .mas-cuenta small{color:var(--muted);font-weight:600}
+  .mas-grupo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+  .mas-grupo:not(:has(.mas-item:not(.hidden))){display:none}
+  .mas-item{display:flex;align-items:center;width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid var(--line);background:none;font-size:15px;font-weight:700;text-align:left;cursor:pointer;color:var(--ink)}
+  .mas-item:last-child{border-bottom:0}
+  .mas-item::after{content:"›";margin-left:auto;color:var(--muted);font-size:20px}
+
+</style>
+</head>
+<body class="cargando">
+
+<!-- ===== Barra: lateral en computadora, superior en celular ===== -->
+<header class="barra" id="barra">
+  <div class="marca">
+    <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/><path d="M12 3v7"/><circle cx="8.5" cy="13" r=".6" fill="currentColor"/><circle cx="15.5" cy="13" r=".6" fill="currentColor"/><path d="m8 21 2-5"/><path d="m16 21-2-5"/></svg></span>
+    <div class="titulo"><b>Guardias FFCC</b><small id="sub-barra">Coordinación operativa</small></div>
+  </div>
+  <nav class="nav" id="nav" aria-label="Secciones">
+    <button type="button" data-vista="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Inicio</span></button>
+    <button type="button" data-vista="guardias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M8 14h3"/><path d="M13 17h3"/></svg><span>Guardias</span><em class="cnt" id="nav-vac" title="Vacantes de hoy y mañana"></em></button>
+    <button type="button" data-vista="personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 5a3.5 3.5 0 0 1 0 7"/><path d="M22 20a6 6 0 0 0-4-5.6"/></svg><span>Personal</span></button>
+    <div class="nav-sec" id="nav-sec">Administración</div>
+    <button type="button" data-vista="bases" data-permiso="editarBases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Líneas y bases</span></button>
+    <button type="button" data-vista="usuarios" data-permiso="usuarios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.5"/></svg><span>Usuarios</span></button>
+    <button type="button" data-vista="historial" data-permiso="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span>Historial</span></button>
+    <button type="button" data-vista="mas" class="solo-tecnica"><span>Más</span></button>
+  </nav>
+  <div class="cuenta" id="cuenta">
+    <div class="cuenta-fila"><span class="avatar" id="cuenta-av"></span><div class="cuenta-txt"><b id="cuenta-nombre"></b><small id="cuenta-rol"></small></div></div>
+    <div class="cuenta-acc">
+      <button type="button" id="btn-pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 9.2-9.2"/><path d="m17 6 3 3"/><path d="m15 8 2 2"/></svg><span>Cambiar PIN</span></button>
+      <button type="button" id="btn-salir" class="salir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg><span>Salir</span></button>
+    </div>
+  </div>
+  <div class="acciones-top">
+    <span class="conexion" id="conexion" title="Conectado"><i></i><span id="conexion-txt">En línea</span></span>
+    <button class="icono" id="btn-tema" type="button" aria-label="Cambiar a oscuro" title="Claro / oscuro">
+      <svg class="luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ===== Ingreso ===== -->
+  <section id="v-login" class="vista login hidden">
+    <div class="login-caja">
+      <div class="login-marca"><span class="logo grande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/><path d="M12 3v7"/><circle cx="8.5" cy="13" r=".6" fill="currentColor"/><circle cx="15.5" cy="13" r=".6" fill="currentColor"/><path d="m8 21 2-5"/><path d="m16 21-2-5"/></svg></span><div><b>Guardias FFCC</b><small>Coordinación operativa</small></div></div>
+      <div id="login-entrar" class="panel">
+        <h1>Ingresar</h1>
+        <p class="lead">Entrá con tu ID de usuario y tu PIN.</p>
+        <div class="campo"><label for="lg-id">ID de usuario</label><input id="lg-id" type="text" autocapitalize="characters" autocomplete="username" spellcheck="false" placeholder="Ej.: ADMIN"></div>
+        <div class="campo"><label for="lg-pin">PIN</label><input id="lg-pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="4 a 6 números"></div>
+        <button class="btn primario ancho" id="lg-ok" type="button">Entrar</button>
+        <p class="ayuda centro">¿Te dieron un código? Escribí tu ID y tocá <b>Entrar</b> sin PIN.</p>
+      </div>
+      <div id="login-codigo" class="panel hidden">
+        <h1>Elegí tu PIN</h1>
+        <p class="lead">Escribí el código de 6 números que te pasó el administrador y elegí un PIN de 4 a 6 números.</p>
+        <div class="campo"><label for="lc-codigo">Código</label><input id="lc-codigo" type="text" inputmode="numeric" maxlength="7" autocomplete="one-time-code" placeholder="000 000"></div>
+        <div class="fila2">
+          <div class="campo"><label for="lc-pin">PIN nuevo</label><input id="lc-pin" type="password" inputmode="numeric" autocomplete="new-password"></div>
+          <div class="campo"><label for="lc-pin2">Repetir PIN</label><input id="lc-pin2" type="password" inputmode="numeric" autocomplete="new-password"></div>
+        </div>
+        <button class="btn primario ancho" id="lc-ok" type="button">Guardar PIN y entrar</button>
+        <p class="ayuda centro"><button class="link" id="lc-volver" type="button">Volver</button></p>
+      </div>
+      <p class="ayuda centro login-pie">Versión 2026-10-06 a</p>
+    </div>
+  </section>
+
+  <!-- ===== Inicio: tablero de cobertura ===== -->
+  <section id="v-inicio" class="vista hidden">
+    <div class="cab">
+      <div><h1>Inicio</h1><p class="lead" id="ini-sub">Cobertura de guardias</p></div>
+      <div class="cab-acc"><button class="btn" id="ini-excel" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>Excel del período</button></div>
+    </div>
+    <div class="chips" id="ini-periodo" role="group" aria-label="Período">
+      <button type="button" data-p="hoy">Hoy</button>
+      <button type="button" data-p="manana">Mañana</button>
+      <button type="button" data-p="semana">Esta semana</button>
+      <button type="button" data-p="prox7">Próximos 7 días</button>
+      <button type="button" data-p="mes">Este mes</button>
+      <button type="button" data-p="otro">Elegir fechas</button>
+    </div>
+    <div class="rango hidden" id="ini-rango">
+      <label>Desde <input type="date" id="ini-desde"></label>
+      <label>Hasta <input type="date" id="ini-hasta"></label>
+    </div>
+    <div class="sync" id="sync-inicio"><span class="spin"></span><span></span></div>
+    <div class="kpis" id="ini-kpis"></div>
+    <div class="grid-ini">
+      <div class="panel ancho2"><div class="panel-cab"><h3>Cobertura por línea</h3><small>Tocá una línea para ver su grilla</small></div><div id="ini-lineas" class="lineas-cards"></div></div>
+      <div class="panel"><div class="panel-cab"><h3>Próximas vacantes</h3><small>Desde ahora hasta 48 h</small></div><div id="ini-proximas"></div></div>
+      <div class="panel"><div class="panel-cab"><h3>Por tipo de personal</h3></div><div id="ini-tipos"></div></div>
+      <div class="panel"><div class="panel-cab"><h3>Bases con más vacantes</h3></div><div id="ini-bases"></div></div>
+      <div class="panel"><div class="panel-cab"><h3>Cobertura día por día</h3></div><div id="ini-dias"></div></div>
+    </div>
+  </section>
+
+  <!-- ===== Guardias: grilla semanal por línea ===== -->
+  <section id="v-guardias" class="vista hidden">
+    <div class="cab">
+      <div><h1>Guardias</h1><p class="lead" id="gu-sub">Grilla semanal por línea y base</p></div>
+      <div class="cab-acc">
+        <button class="btn" id="gu-excel" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>Excel</button>
+        <button class="btn" id="gu-copiar" type="button" data-permiso="copiarSemana"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>Copiar semana</button>
+        <button class="btn primario" id="gu-nueva" type="button" data-permiso="editarGuardias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nueva guardia</button>
+      </div>
+    </div>
+    <div class="lineas-tabs" id="gu-lineas" role="tablist"></div>
+    <div class="herramientas">
+      <div class="semana-nav">
+        <button class="icono" id="gu-ant" type="button" aria-label="Semana anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+        <label class="semana-txt" title="Elegir una fecha"><span id="gu-semana"></span><input type="date" id="gu-fecha" aria-label="Ir a una fecha"></label>
+        <button class="icono" id="gu-sig" type="button" aria-label="Semana siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+        <button class="btn chico" id="gu-hoy" type="button">Hoy</button>
+      </div>
+      <div class="filtros">
+        <div class="seg" id="gu-tipo" role="group" aria-label="Tipo">
+          <button type="button" data-v="" aria-pressed="true">Todos</button><button type="button" data-v="Médico" aria-pressed="false">Médicos</button><button type="button" data-v="Enfermero" aria-pressed="false">Enfermeros</button><button type="button" data-v="Chofer" aria-pressed="false">Choferes</button>
+        </div>
+        <div class="seg" id="gu-estado" role="group" aria-label="Estado">
+          <button type="button" data-v="" aria-pressed="true">Todas</button><button type="button" data-v="vac" aria-pressed="false">Vacantes</button><button type="button" data-v="cub" aria-pressed="false">Cubiertas</button>
+        </div>
+        <input class="buscar" id="gu-buscar" type="search" placeholder="Buscar persona o legajo" autocomplete="off">
+      </div>
+    </div>
+    <div class="resumen-semana" id="gu-resumen"></div>
+    <div class="sync" id="sync-guardias"><span class="spin"></span><span></span></div>
+    <div class="dias-cel" id="gu-dias"></div>
+    <div id="gu-grilla"></div>
+  </section>
+
+  <!-- ===== Personal ===== -->
+  <section id="v-personal" class="vista hidden">
+    <div class="cab">
+      <div><h1>Personal</h1><p class="lead">Médicos, enfermeros y choferes, con su legajo y contratación.</p></div>
+      <div class="cab-acc">
+        <button class="btn" id="pe-excel" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>Excel</button>
+        <button class="btn primario" id="pe-nueva" type="button" data-permiso="editarPersonal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Agregar persona</button>
+      </div>
+    </div>
+    <div class="herramientas">
+      <div class="filtros">
+        <div class="seg" id="pe-tipo" role="group" aria-label="Tipo">
+          <button type="button" data-v="" aria-pressed="true">Todos</button><button type="button" data-v="Médico" aria-pressed="false">Médicos</button><button type="button" data-v="Enfermero" aria-pressed="false">Enfermeros</button><button type="button" data-v="Chofer" aria-pressed="false">Choferes</button>
+        </div>
+        <div class="seg" id="pe-estado" role="group" aria-label="Estado">
+          <button type="button" data-v="activos" aria-pressed="true">Activos</button><button type="button" data-v="baja" aria-pressed="false">De baja</button><button type="button" data-v="" aria-pressed="false">Todos</button>
+        </div>
+        <input class="buscar" id="pe-buscar" type="search" placeholder="Buscar por apellido, nombre o legajo" autocomplete="off">
+      </div>
+    </div>
+    <div class="sync" id="sync-personal"><span class="spin"></span><span></span></div>
+    <div id="pe-lista" class="lista"></div>
+  </section>
+
+  <!-- ===== Líneas y bases ===== -->
+  <section id="v-bases" class="vista hidden">
+    <div class="cab">
+      <div><h1>Líneas y bases</h1><p class="lead">Las bases de cada línea (CRPC y móviles) que aparecen en la grilla de guardias.</p></div>
+      <div class="cab-acc"><button class="btn primario" id="ba-linea" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Agregar línea</button></div>
+    </div>
+    <div id="ba-lista" class="grid-bases"></div>
+  </section>
+
+  <!-- ===== Usuarios ===== -->
+  <section id="v-usuarios" class="vista hidden">
+    <div class="cab">
+      <div><h1>Usuarios</h1><p class="lead">Quién puede entrar y qué puede hacer.</p></div>
+    </div>
+    <div class="panel crear-usuario">
+      <div class="panel-cab"><h3>Crear usuario</h3><small>Queda activo al instante. Te damos su ID y un código para que elija su PIN.</small></div>
+      <div class="fila-crear">
+        <div class="campo"><label for="us-nombre">Nombre</label><input id="us-nombre" type="text" autocomplete="off"></div>
+        <div class="campo"><label for="us-apellido">Apellido</label><input id="us-apellido" type="text" autocomplete="off"></div>
+        <div class="campo"><label for="us-rol">Rol</label><select id="us-rol"></select></div>
+        <button class="btn primario" id="us-crear" type="button">Crear</button>
+      </div>
+      <div class="roles-ayuda" id="us-roles"></div>
+    </div>
+    <div class="sync" id="sync-usuarios"><span class="spin"></span><span></span></div>
+    <div id="us-lista" class="lista"></div>
+  </section>
+
+  <!-- ===== Historial ===== -->
+  <section id="v-historial" class="vista hidden">
+    <div class="cab">
+      <div><h1>Historial</h1><p class="lead">Quién hizo qué y cuándo. Las guardias eliminadas quedan descriptas acá.</p></div>
+    </div>
+    <div class="herramientas"><div class="filtros"><input class="buscar" id="hi-buscar" type="search" placeholder="Buscar por usuario, acción o detalle" autocomplete="off"></div></div>
+    <div class="sync" id="sync-historial"><span class="spin"></span><span></span></div>
+    <div id="hi-lista" class="lista"></div>
+  </section>
+
+  <!-- ===== Más (solo celular) ===== -->
+  <section id="v-mas" class="vista hidden">
+    <div class="mas-cuenta"><span class="avatar grande" id="mas-av"></span><div><b id="mas-nombre"></b><small id="mas-rol"></small></div></div>
+    <div class="mas-grupo" id="mas-admin">
+      <button class="mas-item" type="button" data-ir="bases" data-permiso="editarBases"><span>Líneas y bases</span></button>
+      <button class="mas-item" type="button" data-ir="usuarios" data-permiso="usuarios"><span>Usuarios</span></button>
+      <button class="mas-item" type="button" data-ir="historial" data-permiso="historial"><span>Historial</span></button>
+    </div>
+    <div class="mas-grupo">
+      <button class="mas-item" type="button" id="mas-pin"><span>Cambiar PIN</span></button>
+      <button class="mas-item" type="button" id="mas-tema"><span>Tema claro / oscuro</span></button>
+    </div>
+    <button class="btn peligro ancho" type="button" id="mas-salir">Salir</button>
+  </section>
+
+  <footer class="pie" id="pie">Coordinación de Guardias FFCC · Versión 2026-10-06 a</footer>
+</main>
+
+<!-- ===== Barra de abajo (celular) ===== -->
+<nav class="bnav hidden" id="bnav" aria-label="Secciones">
+  <button type="button" data-ir="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Inicio</button>
+  <button type="button" data-ir="guardias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>Guardias<em class="bcnt" id="bnav-vac"></em></button>
+  <button type="button" data-ir="personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 5a3.5 3.5 0 0 1 0 7"/><path d="M22 20a6 6 0 0 0-4-5.6"/></svg>Personal</button>
+  <button type="button" data-ir="mas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</button>
+</nav>
+
+<!-- ===== Ventana: guardia ===== -->
+<div class="modal" id="m-guardia" role="dialog" aria-modal="true" aria-labelledby="mg-titulo">
+  <div class="caja">
+    <div class="caja-cab"><div><h3 id="mg-titulo">Nueva guardia</h3><small id="mg-subtitulo"></small></div><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <div class="fila2">
+        <div class="campo"><label for="mg-fecha">Fecha</label><input type="date" id="mg-fecha"><small class="ayuda" id="mg-dia"></small></div>
+        <div class="campo"><label for="mg-linea">Línea</label><select id="mg-linea"></select></div>
+      </div>
+      <div class="campo"><label for="mg-base">Base</label><select id="mg-base"></select></div>
+      <div class="campo"><label>Tipo de guardia</label>
+        <div class="seg ancho" id="mg-tipo" role="group" aria-label="Tipo de guardia"><button type="button" data-v="Médico">Médico</button><button type="button" data-v="Enfermero">Enfermero</button><button type="button" data-v="Chofer">Chofer</button></div>
+      </div>
+      <div class="campo"><label>Horario</label>
+        <div class="turnos" id="mg-turnos"></div>
+        <div class="fila2">
+          <div class="campo sin-mb"><label for="mg-ing" class="sub">Ingreso</label><input type="time" id="mg-ing"></div>
+          <div class="campo sin-mb"><label for="mg-egr" class="sub">Egreso</label><input type="time" id="mg-egr"></div>
+        </div>
+        <small class="ayuda" id="mg-dur"></small>
+      </div>
+      <div class="campo"><label for="mg-persona">Personal asignado</label>
+        <div class="autoc">
+          <input id="mg-persona" type="text" placeholder="Buscar por apellido, nombre o legajo · vacío = VACANTE" autocomplete="off" spellcheck="false">
+          <button class="icono limpiar hidden" type="button" id="mg-limpiar" aria-label="Dejar vacante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          <div class="sugerencias hidden" id="mg-sug" role="listbox"></div>
+        </div>
+        <div class="aviso hidden" id="mg-aviso"></div>
+      </div>
+      <div class="campo"><label for="mg-obs">Observaciones <span class="opt">(opcional)</span></label><textarea id="mg-obs" rows="2" maxlength="500" placeholder="Reemplazo, cambio de base, pedido especial…"></textarea></div>
+      <p class="meta" id="mg-meta"></p>
+    </div>
+    <div class="caja-pie">
+      <button class="btn peligro-suave" type="button" id="mg-eliminar">Eliminar</button>
+      <span class="relleno"></span>
+      <button class="btn" type="button" data-cerrar>Cancelar</button>
+      <button class="btn primario" type="button" id="mg-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Ventana: persona ===== -->
+<div class="modal" id="m-persona" role="dialog" aria-modal="true" aria-labelledby="mp-titulo">
+  <div class="caja chica">
+    <div class="caja-cab"><h3 id="mp-titulo">Agregar persona</h3><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <div class="campo"><label>Tipo de personal</label><div class="seg ancho" id="mp-tipo" role="group"><button type="button" data-v="Médico">Médico</button><button type="button" data-v="Enfermero">Enfermero</button><button type="button" data-v="Chofer">Chofer</button></div></div>
+      <div class="fila2">
+        <div class="campo"><label for="mp-apellido">Apellido</label><input id="mp-apellido" type="text" autocomplete="off"></div>
+        <div class="campo"><label for="mp-nombre">Nombre</label><input id="mp-nombre" type="text" autocomplete="off"></div>
+      </div>
+      <div class="fila2">
+        <div class="campo"><label for="mp-legajo">Legajo</label><input id="mp-legajo" type="text" inputmode="numeric" autocomplete="off"></div>
+        <div class="campo"><label for="mp-celular">Celular <span class="opt">(opcional)</span></label><input id="mp-celular" type="tel" autocomplete="off"></div>
+      </div>
+      <div class="campo"><label for="mp-contratacion">Contratación</label><select id="mp-contratacion"></select></div>
+    </div>
+    <div class="caja-pie">
+      <button class="btn peligro-suave" type="button" id="mp-estado">Dar de baja</button>
+      <span class="relleno"></span>
+      <button class="btn" type="button" data-cerrar>Cancelar</button>
+      <button class="btn primario" type="button" id="mp-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Ventana: línea o base ===== -->
+<div class="modal" id="m-base" role="dialog" aria-modal="true" aria-labelledby="mb-titulo">
+  <div class="caja chica">
+    <div class="caja-cab"><h3 id="mb-titulo">Base</h3><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <div class="campo"><label for="mb-nombre">Nombre</label><input id="mb-nombre" type="text" autocomplete="off"></div>
+      <div id="mb-de-base">
+        <div class="fila2">
+          <div class="campo"><label for="mb-linea">Línea</label><select id="mb-linea"></select></div>
+          <div class="campo"><label for="mb-tipo">Tipo</label><select id="mb-tipo"></select></div>
+        </div>
+        <div class="campo"><label for="mb-direccion">Dirección <span class="opt">(opcional)</span></label><input id="mb-direccion" type="text" autocomplete="off"></div>
+      </div>
+      <div id="mb-de-linea" class="campo"><label for="mb-color">Color</label><div class="color-fila"><input id="mb-color" type="color" value="#1B3A5C"><small class="ayuda">Identifica a la línea en el tablero y la grilla</small></div></div>
+    </div>
+    <div class="caja-pie">
+      <button class="btn peligro-suave" type="button" id="mb-estado">Dar de baja</button>
+      <span class="relleno"></span>
+      <button class="btn" type="button" data-cerrar>Cancelar</button>
+      <button class="btn primario" type="button" id="mb-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Ventana: copiar semana ===== -->
+<div class="modal" id="m-copiar" role="dialog" aria-modal="true" aria-labelledby="mc-titulo">
+  <div class="caja chica">
+    <div class="caja-cab"><h3 id="mc-titulo">Copiar semana</h3><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <p class="ayuda sin-mt">Copia las guardias con el mismo horario y la misma persona. Si alguien ya no está activo o se superpone con otra guardia, la copia queda vacante.</p>
+      <div class="campo"><label for="mc-linea">Línea</label><select id="mc-linea"></select></div>
+      <div class="fila2">
+        <div class="campo"><label for="mc-origen">De la semana del</label><input type="date" id="mc-origen"></div>
+        <div class="campo"><label for="mc-destino">A la semana del</label><input type="date" id="mc-destino"></div>
+      </div>
+      <p class="ayuda" id="mc-info"></p>
+    </div>
+    <div class="caja-pie"><span class="relleno"></span><button class="btn" type="button" data-cerrar>Cancelar</button><button class="btn primario" type="button" id="mc-ok">Copiar</button></div>
+  </div>
+</div>
+
+<!-- ===== Ventana: cambiar PIN ===== -->
+<div class="modal" id="m-pin" role="dialog" aria-modal="true" aria-labelledby="mpin-titulo">
+  <div class="caja chica">
+    <div class="caja-cab"><h3 id="mpin-titulo">Cambiar PIN</h3><button class="icono" type="button" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="caja-cuerpo">
+      <div class="campo"><label for="pin-actual">PIN actual</label><input id="pin-actual" type="password" inputmode="numeric" autocomplete="current-password"></div>
+      <div class="fila2">
+        <div class="campo"><label for="pin-nuevo">PIN nuevo</label><input id="pin-nuevo" type="password" inputmode="numeric" autocomplete="new-password"></div>
+        <div class="campo"><label for="pin-nuevo2">Repetir</label><input id="pin-nuevo2" type="password" inputmode="numeric" autocomplete="new-password"></div>
+      </div>
+      <p class="ayuda sin-mt">Se cierran tus sesiones en otros dispositivos.</p>
+    </div>
+    <div class="caja-pie"><span class="relleno"></span><button class="btn" type="button" data-cerrar>Cancelar</button><button class="btn primario" type="button" id="pin-ok">Cambiar</button></div>
+  </div>
+</div>
+
+<!-- ===== Ventana: confirmar ===== -->
+<div class="modal confirmar" id="m-confirmar" role="alertdialog" aria-modal="true" aria-describedby="cf-texto">
+  <div class="caja chica">
+    <div class="caja-cuerpo"><div class="cf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg></div><p id="cf-texto"></p></div>
+    <div class="caja-pie"><span class="relleno"></span><button class="btn" type="button" id="cf-no">Cancelar</button><button class="btn primario" type="button" id="cf-si">Aceptar</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  // ===== Configuración =====
+  // URL del script de Google publicado (Implementar → Aplicación web; termina en /exec). Ver docs/publicar.md.
+  // El servidor local de pruebas (pruebas/servidor-local.js) la reemplaza por /api con window.API_URL.
+  const SCRIPT_URL_PUBLICADA = 'https://script.google.com/macros/s/AKfycbwLYtOgTv9T7jaz19zl7NcfbAh2raMO9xosBy14EpOX8e4y_M568UaZr7NQoGxOahVMuw/exec';
+  const SCRIPT_URL = window.API_URL || SCRIPT_URL_PUBLICADA;
+
+  // Al publicar una versión nueva, cambiar VERSION (la fecha con una letra). Se ve en el pie y en el ingreso.
+  const VERSION = '2026-10-06 a';
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+  const TIPOS = ['Médico', 'Enfermero', 'Chofer'];
+  const TIPO_CORTO = { 'Médico': 'MED', 'Enfermero': 'ENF', 'Chofer': 'CHO' };
+  const TIPO_PLURAL = { 'Médico': 'Médicos', 'Enfermero': 'Enfermeros', 'Chofer': 'Choferes' };
+  const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const DIAS_CORTOS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  const TURNOS_RAPIDOS = [['07:00', '19:00'], ['19:00', '07:00'], ['08:00', '20:00'], ['20:00', '08:00'], ['08:00', '08:00']];
+  const DESCRIPCION_ROLES = {
+    'Administrador': 'Todo: guardias, personal, líneas y bases, usuarios e historial.',
+    'Supervisor': 'Guardias (también eliminar y copiar semanas), personal e historial.',
+    'Operador': 'Crea, edita y asigna guardias. Ve el personal.',
+    'Consulta': 'Solo mira: tablero, guardias y personal.',
+  };
+
+  // ===== Estado general =====
+  let sesion = null; try { sesion = JSON.parse(localStorage.getItem('sesion') || 'null'); } catch {}
+  let cat = { lineas: [], bases: [], personal: [], tipos: TIPOS, contrataciones: [], tiposBase: [], roles: [] };
+  let permisos = {};
+  let vistaActual = '';
+
+  // ===== Utilidades =====
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const plural = (n, uno, varios) => `${n} ${n === 1 ? uno : varios}`;
+  const esCelular = () => { try { return matchMedia('(max-width: 640px)').matches; } catch { return false; } };
+  const iniciales = (a, b) => (((a || '')[0] || '') + ((b || '')[0] || '')).toUpperCase();
+  const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+  function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+  function toast(msg, cls) {
+    const t = $('#toast'); t.textContent = msg; t.className = 'toast show ' + (cls || '');
+    clearTimeout(t._t); t._t = setTimeout(() => { t.className = 'toast'; }, cls === 'err' ? 4200 : 2800);
+  }
+
+  // ---- Fechas: siempre texto AAAA-MM-DD; las cuentas en UTC para no depender de la zona horaria ----
+  const isoAFecha = iso => { const [y, m, d] = String(iso).split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+  const fechaAIso = dt => dt.toISOString().slice(0, 10);
+  const sumarDias = (iso, n) => { const d = isoAFecha(iso); d.setUTCDate(d.getUTCDate() + n); return fechaAIso(d); };
+  const diasEntre = (a, b) => Math.round((isoAFecha(b) - isoAFecha(a)) / 864e5);
+  const diaSemana = iso => (isoAFecha(iso).getUTCDay() + 6) % 7;   // 0 = lunes
+  const lunesDe = iso => sumarDias(iso, -diaSemana(iso));
+  const hoyISO = () => { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; };
+  const ahoraHHMM = () => { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${p(d.getHours())}:${p(d.getMinutes())}`; };
+  const fechaValida = f => /^\d{4}-\d{2}-\d{2}$/.test(String(f || '')) && fechaAIso(isoAFecha(f)) === f;
+  const ddmm = iso => { const [, m, d] = iso.split('-'); return `${d}/${m}`; };
+  const ddmmaaaa = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
+  const fechaCorta = iso => `${DIAS_CORTOS[diaSemana(iso)]} ${ddmm(iso)}`;                 // "Lun 06/10"
+  const fechaLarga = iso => { const [y, m, d] = iso.split('-').map(Number); return `${DIAS[diaSemana(iso)]} ${d} de ${MESES[m - 1]}`; };
+  function textoSemana(lunes) {
+    const dom = sumarDias(lunes, 6), [y1, m1, d1] = lunes.split('-').map(Number), [y2, m2, d2] = dom.split('-').map(Number);
+    return m1 === m2 ? `${d1} al ${d2} de ${MESES[m2 - 1]} ${y2}` : `${d1} ${MESES[m1 - 1]} al ${d2} ${MESES[m2 - 1]} ${y2}`;
+  }
+  function textoRango(desde, hasta) {
+    if (desde === hasta) return fechaLarga(desde);
+    return `del ${ddmmaaaa(desde)} al ${ddmmaaaa(hasta)}`;
+  }
+
+  // ---- Horas ----
+  const horaValida = h => /^([01]\d|2[0-3]):[0-5]\d$/.test(String(h || ''));
+  const minutos = h => { const [a, b] = h.split(':').map(Number); return a * 60 + b; };
+  const horasDe = g => { let d = minutos(g.egreso) - minutos(g.ingreso); if (d <= 0) d += 1440; return d / 60; };
+  const textoHorario = g => `${g.ingreso.replace(':00', '')}–${g.egreso.replace(':00', '')}`;   // "07–19" o "07:30–19"
+  // inicio y fin en milisegundos (UTC, solo para comparar)
+  function intervalo(g) {
+    const [y, m, d] = g.fecha.split('-').map(Number), [hi, mi] = g.ingreso.split(':').map(Number), [he, me] = g.egreso.split(':').map(Number);
+    const ini = Date.UTC(y, m - 1, d, hi, mi); let fin = Date.UTC(y, m - 1, d, he, me);
+    if (fin <= ini) fin += 864e5;
+    return [ini, fin];
+  }
+  const ahoraMs = () => { const d = new Date(); return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()); };
+
+  // ---- Descargas y librerías que se bajan recién cuando hacen falta (Excel) ----
+  const LIBS = { XLSX: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js' };
+  const libsCargando = {};
+  function cargarLib(nombre) {
+    if (window[nombre]) return Promise.resolve(window[nombre]);
+    return libsCargando[nombre] || (libsCargando[nombre] = new Promise((ok, no) => {
+      const s = document.createElement('script'); s.src = LIBS[nombre]; s.async = true;
+      s.onload = () => (window[nombre] ? ok(window[nombre]) : no(new Error('No se pudo cargar ' + nombre)));
+      s.onerror = () => { delete libsCargando[nombre]; s.remove(); no(new Error('No se pudo bajar lo necesario para el Excel. Revisá la conexión.')); };
+      document.head.appendChild(s);
+    }));
+  }
+  function descargar(blob, nombre) {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nombre;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  }
+
+  // indicador "Cargando…" / "Actualizando…" de cada pantalla
+  function sync(vista, texto) { const el = $('#sync-' + vista); if (!el) return; el.classList.toggle('on', !!texto); el.lastElementChild.textContent = texto || ''; }
+  const esqueletos = n => Array.from({ length: n }, () => '<div class="esqueleto"></div>').join('');
+
+  // segmentado (grupo de botones con aria-pressed): marca el elegido y devuelve su valor
+  function segElegir(grupo, valor) { $$('button', grupo).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === valor))); }
+  const segValor = grupo => { const b = $('button[aria-pressed="true"]', grupo); return b ? b.dataset.v : ''; };
+  function segAlTocar(grupo, fn) {
+    grupo.addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (!b || grupo.classList.contains('bloqueado')) return; segElegir(grupo, b.dataset.v); fn(b.dataset.v); });
+  }
+
+  // ===== Conexión con el script de Google =====
+  // Todo va por POST con { accion, token, … }. Sin Content-Type a propósito: con text/plain (el default) el navegador no
+  // hace la consulta previa de CORS, que Apps Script no contesta.
+  async function api(accion, datos, espera) {
+    if (!SCRIPT_URL) throw new Error('Falta configurar la URL del script (SCRIPT_URL_PUBLICADA en fuente/app/js/01-base.js)');
+    const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), espera || 45000);
+    let res;
+    try {
+      const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ accion, token: sesion?.token, ...(datos || {}) }), signal: ctrl.signal });
+      res = await r.json();
+    } catch (e) {
+      marcarConexion(false);
+      throw new Error(e.name === 'AbortError' ? 'El servidor tardó demasiado. Probá de nuevo.' : 'No hay conexión con el servidor. Revisá internet y probá de nuevo.');
+    } finally { clearTimeout(t); }
+    marcarConexion(true);
+    if (!res.ok) {
+      if (res.sesion === false) sesionCaida();
+      const err = new Error(res.error || 'Error del servidor'); err.datos = res; throw err;
+    }
+    return res;
+  }
+
+  let conectado = true;
+  function marcarConexion(ok) {
+    if (ok === conectado) return;
+    conectado = ok;
+    $('#conexion').classList.toggle('off', !ok); $('#cuenta').classList.toggle('off', !ok);
+    $('#conexion').title = ok ? 'Conectado' : 'Sin conexión'; $('#conexion-txt').textContent = ok ? 'En línea' : 'Sin conexión';
+  }
+  window.addEventListener('offline', () => marcarConexion(false));
+  window.addEventListener('online', () => { marcarConexion(true); revisarCambios(); });
+
+  // ---- Cambios de otros usuarios ----
+  // Cada 20 s (con la pantalla a la vista) se pregunta la versión de los datos; no abre la planilla, es instantáneo.
+  // Si cambió, se vuelve a pedir el catálogo y lo que muestra la pantalla actual.
+  let verDatos = '', revisando = false, escribiendo = 0;
+  async function revisarCambios() {
+    if (!sesion?.token || document.hidden || revisando || escribiendo) return;
+    revisando = true;
+    try {
+      const r = await api('version', null, 20000);
+      if (verDatos && r.ver !== verDatos && !escribiendo) { await refrescar(); toast('Se actualizó con cambios de otro usuario'); }
+    } catch {} finally { revisando = false; }
+  }
+  setInterval(revisarCambios, 20000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) revisarCambios(); });
+
+  // Envoltorio para las escrituras: bloquea el botón, avisa el resultado y después refresca los datos
+  async function escribir(accion, datos, opciones) {
+    const o = opciones || {}, btn = o.boton;
+    const textoBtn = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.textContent = o.textoEspera || 'Guardando…'; }
+    escribiendo++;
+    try {
+      const r = await api(accion, datos);
+      await refrescar();
+      if (o.ok) toast(typeof o.ok === 'function' ? o.ok(r) : o.ok, 'ok');
+      return r;
+    } catch (e) {
+      if (!o.silencioso) toast(e.message, 'err');
+      throw e;
+    } finally {
+      escribiendo--;
+      if (btn) { btn.disabled = false; btn.innerHTML = textoBtn; }
+    }
+  }
+
+  // ===== Datos: catálogo (líneas, bases, personal) y guardias por rango de fechas =====
+  let lineaPorId = {}, basePorId = {}, personaPorId = {};
+
+  async function cargarCatalogo() {
+    const r = await api('catalogo');
+    cat = r; permisos = r.permisos || {}; verDatos = r.ver;
+    sesion = { ...sesion, ...r.usuario }; guardarSesion(sesion);
+    lineaPorId = {}; basePorId = {}; personaPorId = {};
+    cat.lineas.forEach(l => { lineaPorId[l.id] = l; });
+    cat.bases.forEach(b => { basePorId[b.id] = b; });
+    cat.personal.forEach(p => { personaPorId[p.id] = p; });
+    try { localStorage.setItem('catalogo', JSON.stringify(r)); } catch {}
+  }
+  const lineasActivas = () => cat.lineas.filter(l => l.activo);
+  const basesDeLinea = (lineaId, todas) => cat.bases.filter(b => b.linea === lineaId && (todas || b.activo))
+    .sort((a, b) => (a.tipo === b.tipo ? 0 : a.tipo === 'CRPC' ? -1 : 1) || a.nombre.localeCompare(b.nombre, 'es'));
+  const nombrePersona = p => p ? `${p.apellido}, ${p.nombre}` : '';
+  const nombreDeGuardia = g => g.personal ? (personaPorId[g.personal] ? nombrePersona(personaPorId[g.personal]) : (g.asignado || '¿?')) : '';
+  const nombreBase = id => (basePorId[id] || {}).nombre || id;
+  const nombreLinea = id => (lineaPorId[id] || {}).nombre || id;
+  const colorLinea = id => (lineaPorId[id] || {}).color || '#1B3A5C';
+
+  // ---- Guardias: se piden por rango y quedan en memoria hasta el próximo cambio ----
+  const cacheGuardias = new Map();     // 'desde|hasta' -> lista
+  async function traerGuardias(desde, hasta, forzar) {
+    const k = desde + '|' + hasta;
+    if (!forzar && cacheGuardias.has(k)) return cacheGuardias.get(k);
+    const r = await api('guardias', { desde, hasta });
+    cacheGuardias.set(k, r.guardias);
+    if (cacheGuardias.size > 12) cacheGuardias.delete(cacheGuardias.keys().next().value);
+    return r.guardias;
+  }
+  // todas las guardias que ya están en memoria (sin repetir): sirven para avisar superposiciones al asignar
+  function guardiasConocidas() {
+    const m = new Map();
+    cacheGuardias.forEach(lista => lista.forEach(g => m.set(g.id, g)));
+    return [...m.values()];
+  }
+
+  // Después de cualquier cambio (propio o de otro usuario): catálogo nuevo, memoria vacía y la pantalla actual de nuevo
+  async function refrescar() {
+    cacheGuardias.clear();
+    await cargarCatalogo();
+    pintarCuenta(); aplicarPermisos();
+    await pintarVista(vistaActual, true);
+    contarVacantesProximas();
+  }
+
+  // Número en "Guardias" (barra lateral y de abajo): vacantes de hoy y mañana
+  async function contarVacantesProximas() {
+    try {
+      const hoy = hoyISO(), lista = await traerGuardias(hoy, sumarDias(hoy, 1));
+      const ahora = ahoraMs();
+      const n = lista.filter(g => !g.personal && intervalo(g)[1] > ahora && (lineaPorId[g.linea] || {}).activo !== false).length;
+      $('#nav-vac').textContent = n ? String(n) : ''; $('#bnav-vac').textContent = n ? String(n) : '';
+    } catch {}
+  }
+
+  // ===== Ventanas (modales) =====
+  // abrirVentana('m-guardia'); se cierran con la X, Cancelar ([data-cerrar]), Esc o tocando afuera.
+  function abrirVentana(id) {
+    const m = $('#' + id); m.classList.add('open'); document.body.style.overflow = 'hidden';
+    setTimeout(() => { const f = $('[autofocus], .caja-cuerpo input:not([type=hidden]):not(:disabled), .caja-cuerpo select', m); if (f && !esCelular()) f.focus(); }, 60);
+  }
+  function cerrarVentana(id) {
+    const m = $('#' + id); m.classList.remove('open');
+    if (!$('.modal.open')) document.body.style.overflow = '';
+  }
+  $$('.modal:not(.confirmar)').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-cerrar]')) cerrarVentana(m.id); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const abiertas = $$('.modal.open:not(.confirmar)');
+    if (abiertas.length && !$('#m-confirmar.open')) cerrarVentana(abiertas[abiertas.length - 1].id);
+  });
+
+  // confirmar(texto, { ok, cancelar, peligro, soloAceptar }) → Promise<boolean>. Reemplaza al confirm() del navegador.
+  function confirmar(texto, opciones) {
+    const o = Object.assign({ ok: 'Aceptar', cancelar: 'Cancelar', peligro: false }, opciones || {});
+    const m = $('#m-confirmar');
+    if (o.html) $('#cf-texto').innerHTML = o.html; else $('#cf-texto').textContent = texto;
+    $('#cf-si').textContent = o.ok; $('#cf-no').textContent = o.cancelar;
+    $('#cf-no').classList.toggle('hidden', !!o.soloAceptar);
+    m.classList.toggle('peligro', !!o.peligro); m.classList.add('open');
+    return new Promise(res => {
+      const fin = v => { m.classList.remove('open'); $('#cf-si').onclick = $('#cf-no').onclick = m.onclick = null; document.removeEventListener('keydown', tecla, true); res(v); };
+      const tecla = e => { if (e.key === 'Escape') { e.stopPropagation(); fin(false); } else if (e.key === 'Enter') { e.preventDefault(); fin(true); } };
+      $('#cf-si').onclick = () => fin(true); $('#cf-no').onclick = () => fin(false);
+      m.onclick = e => { if (e.target === m) fin(false); };
+      document.addEventListener('keydown', tecla, true);
+      setTimeout(() => $(o.peligro ? '#cf-no' : '#cf-si').focus(), 50);   // en lo peligroso, Enter no acepta por accidente
+    });
+  }
+
+  // marca en rojo un campo con problema y lo lleva a la vista
+  function marcarInvalido(el, mensaje) {
+    const c = el.closest('.campo'); if (c) c.classList.add('invalido');
+    if (mensaje) toast(mensaje, 'err');
+    try { el.focus(); } catch {}
+    return false;
+  }
+  document.addEventListener('input', e => { const c = e.target.closest && e.target.closest('.campo.invalido'); if (c) c.classList.remove('invalido'); });
+  document.addEventListener('click', e => { const c = e.target.closest && e.target.closest('.campo.invalido'); if (c && e.target.closest('.seg')) c.classList.remove('invalido'); });
+
+  // ===== Navegación entre pantallas =====
+  // Cada pantalla tiene su sección (#v-…) y una función que la dibuja. La pantalla actual queda en la dirección (#guardias),
+  // así el botón Atrás del navegador y recargar la página funcionan.
+  const VISTAS = {
+    inicio:    { pintar: r => pintarInicio(r) },
+    guardias:  { pintar: r => pintarGuardias(r) },
+    personal:  { pintar: r => pintarPersonal(r) },
+    bases:     { pintar: () => pintarBases(), permiso: 'editarBases' },
+    usuarios:  { pintar: r => pintarUsuarios(r), permiso: 'usuarios' },
+    historial: { pintar: r => pintarHistorial(r), permiso: 'historial' },
+    mas:       { pintar: () => pintarMas() },
+  };
+  const vistaPermitida = v => VISTAS[v] && (!VISTAS[v].permiso || permisos[VISTAS[v].permiso]);
+
+  function irA(v, opciones) {
+    if (!vistaPermitida(v)) v = 'inicio';
+    if (location.hash.slice(1) !== v) history.pushState(null, '', '#' + v);
+    mostrarVista(v, opciones);
+  }
+  function mostrarVista(v, opciones) {
+    vistaActual = v;
+    Object.keys(VISTAS).forEach(n => $('#v-' + n).classList.toggle('hidden', n !== v));
+    $$('.nav button[data-vista]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.vista === v)));
+    const enMas = ['mas', 'bases', 'usuarios', 'historial'].includes(v);
+    $$('#bnav button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.ir === v || (b.dataset.ir === 'mas' && enMas))));
+    if (opciones && opciones.antes) opciones.antes();
+    window.scrollTo({ top: 0 });
+    pintarVista(v);
+  }
+  async function pintarVista(v, refresco) {
+    if (!v || !VISTAS[v]) return;
+    try { await VISTAS[v].pintar(!!refresco); } catch (e) { console.error(e); if (!refresco) toast(e.message, 'err'); }
+  }
+  window.addEventListener('popstate', () => { if (sesion?.token) mostrarVista(vistaPermitida(location.hash.slice(1)) ? location.hash.slice(1) : 'inicio'); });
+  $('#nav').addEventListener('click', e => { const b = e.target.closest('button[data-vista]'); if (b) irA(b.dataset.vista); });
+  $('#bnav').addEventListener('click', e => { const b = e.target.closest('button[data-ir]'); if (b) irA(b.dataset.ir); });
+  $('#v-mas').addEventListener('click', e => { const b = e.target.closest('[data-ir]'); if (b) irA(b.dataset.ir); });
+
+  // Lo que la persona no puede usar no se muestra (el script igual lo rechazaría)
+  function aplicarPermisos() {
+    $$('[data-permiso]').forEach(el => el.classList.toggle('hidden', !permisos[el.dataset.permiso]));
+    $('#nav-sec').classList.toggle('hidden', !['editarBases', 'usuarios', 'historial'].some(p => permisos[p]));
+  }
+
+  function pintarCuenta() {
+    if (!sesion) return;
+    const ini = iniciales(sesion.nombre, sesion.apellido);
+    $('#cuenta-av').textContent = ini; $('#mas-av').textContent = ini;
+    $('#cuenta-nombre').textContent = `${sesion.nombre} ${sesion.apellido}`; $('#mas-nombre').textContent = `${sesion.nombre} ${sesion.apellido}`;
+    $('#cuenta-rol').textContent = `${sesion.rol} · ${sesion.id}`; $('#mas-rol').textContent = `${sesion.rol} · ID ${sesion.id}`;
+    $('#sub-barra').textContent = esCelular() ? sesion.rol : 'Coordinación operativa';
+    $('#cuenta').title = `${sesion.nombre} ${sesion.apellido} · ${sesion.rol}`;
+  }
+  function pintarMas() { pintarCuenta(); aplicarPermisos(); }
+
+  // ===== Tema claro / oscuro =====
+  const temaActual = () => { const t = document.documentElement.getAttribute('data-theme'); if (t === 'dark' || t === 'light') return t; try { return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch { return 'light'; } };
+  function cambiarTema() {
+    const t = temaActual() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('tema', t); } catch {}
+    $('#btn-tema').setAttribute('aria-label', t === 'dark' ? 'Cambiar a claro' : 'Cambiar a oscuro');
+  }
+  $('#btn-tema').addEventListener('click', cambiarTema);
+  $('#mas-tema').addEventListener('click', cambiarTema);
+
+  // Si cambia el ancho (girar el celular, achicar la ventana) se redibuja la pantalla: la grilla tiene dos formatos
+  let anchoPrevio = window.innerWidth;
+  window.addEventListener('resize', debounce(() => {
+    if (window.innerWidth === anchoPrevio) return;
+    const antes = anchoPrevio <= 640, ahora = window.innerWidth <= 640;
+    anchoPrevio = window.innerWidth;
+    pintarCuenta();
+    if (antes !== ahora && vistaActual === 'guardias') pintarVista('guardias', true);
+    if (!ahora && vistaActual === 'mas') irA('inicio');
+  }, 200));
+
+  // ===== Ingreso con ID y PIN, y elección de PIN con el código del administrador =====
+  const guardarSesion = s => { sesion = s; try { if (s) localStorage.setItem('sesion', JSON.stringify(s)); else localStorage.removeItem('sesion'); } catch {} };
+  let idPendiente = '';
+
+  function mostrarIngreso(seccion) {
+    document.body.classList.add('en-login');
+    Object.keys(VISTAS).forEach(n => $('#v-' + n).classList.add('hidden'));
+    $('#v-login').classList.remove('hidden');
+    $('#login-entrar').classList.toggle('hidden', seccion === 'codigo');
+    $('#login-codigo').classList.toggle('hidden', seccion !== 'codigo');
+    document.body.classList.remove('cargando');
+    setTimeout(() => $(seccion === 'codigo' ? '#lc-codigo' : ($('#lg-id').value ? '#lg-pin' : '#lg-id')).focus(), 50);
+  }
+
+  async function entrar() {
+    const id = $('#lg-id').value.trim().toUpperCase(), pin = $('#lg-pin').value.trim();
+    if (!id) return marcarInvalido($('#lg-id'), 'Escribí tu ID');
+    const btn = $('#lg-ok'); btn.disabled = true; btn.textContent = 'Entrando…';
+    try {
+      const r = await api('ingresar', { id, pin });
+      if (r.requiereCodigo) { idPendiente = r.id; mostrarIngreso('codigo'); return; }
+      $('#lg-pin').value = '';
+      await iniciarSesion(r);
+    } catch (e) { toast(e.message, 'err'); $('#lg-pin').select(); }
+    finally { btn.disabled = false; btn.textContent = 'Entrar'; }
+  }
+
+  async function guardarPinConCodigo() {
+    const codigo = $('#lc-codigo').value.replace(/\D/g, ''), p1 = $('#lc-pin').value.trim(), p2 = $('#lc-pin2').value.trim();
+    if (codigo.length !== 6) return marcarInvalido($('#lc-codigo'), 'El código tiene 6 números');
+    if (!/^\d{4,6}$/.test(p1)) return marcarInvalido($('#lc-pin'), 'El PIN tiene que tener entre 4 y 6 números');
+    if (p1 !== p2) return marcarInvalido($('#lc-pin2'), 'Los dos PIN no coinciden');
+    const btn = $('#lc-ok'); btn.disabled = true; btn.textContent = 'Guardando…';
+    try {
+      const r = await api('pinNuevo', { id: idPendiente, codigo, pin: p1 });
+      ['#lc-codigo', '#lc-pin', '#lc-pin2'].forEach(s => { $(s).value = ''; });
+      toast('PIN guardado. ¡Bienvenido!', 'ok');
+      await iniciarSesion(r);
+    } catch (e) { toast(e.message, 'err'); }
+    finally { btn.disabled = false; btn.textContent = 'Guardar PIN y entrar'; }
+  }
+
+  async function iniciarSesion(r) {
+    guardarSesion({ ...r.usuario, token: r.token });
+    document.body.classList.remove('en-login');
+    $('#v-login').classList.add('hidden');
+    await arrancarApp();
+  }
+
+  // El script dijo que el token ya no vale (venció, le dieron de baja o le cambiaron el PIN)
+  let avisoSesion = false;
+  function sesionCaida() {
+    if (avisoSesion) return; avisoSesion = true;
+    guardarSesion(null);
+    toast('Tu sesión venció. Volvé a entrar.', 'err');
+    setTimeout(() => { avisoSesion = false; }, 4000);
+    mostrarIngreso('entrar');
+  }
+
+  async function salir() {
+    if (!await confirmar('¿Salir de la app en este dispositivo?', { ok: 'Salir', peligro: true })) return;
+    try { await api('salir', null, 8000); } catch {}
+    guardarSesion(null); cacheGuardias.clear();
+    try { localStorage.removeItem('catalogo'); } catch {}
+    $('#lg-pin').value = '';
+    history.replaceState(null, '', location.pathname + location.search);
+    mostrarIngreso('entrar');
+  }
+
+  $('#lg-ok').addEventListener('click', entrar);
+  $('#lg-id').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#lg-pin').focus(); } });
+  $('#lg-pin').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+  $('#lc-ok').addEventListener('click', guardarPinConCodigo);
+  $('#lc-pin2').addEventListener('keydown', e => { if (e.key === 'Enter') guardarPinConCodigo(); });
+  $('#lc-volver').addEventListener('click', () => mostrarIngreso('entrar'));
+  $('#btn-salir').addEventListener('click', salir);
+  $('#mas-salir').addEventListener('click', salir);
+
+  // ===== Inicio: tablero de cobertura del período elegido =====
+  let periodoInicio = 'semana'; try { periodoInicio = localStorage.getItem('periodo_inicio') || 'semana'; } catch {}
+
+  function rangoPeriodo(p) {
+    const hoy = hoyISO();
+    if (p === 'hoy') return [hoy, hoy];
+    if (p === 'manana') return [sumarDias(hoy, 1), sumarDias(hoy, 1)];
+    if (p === 'prox7') return [hoy, sumarDias(hoy, 6)];
+    if (p === 'mes') { const [y, m] = hoy.split('-').map(Number); const ult = new Date(Date.UTC(y, m, 0)).getUTCDate(); return [`${y}-${String(m).padStart(2, '0')}-01`, `${y}-${String(m).padStart(2, '0')}-${ult}`]; }
+    if (p === 'otro') {
+      let a = $('#ini-desde').value, b = $('#ini-hasta').value;
+      if (!fechaValida(a)) a = lunesDe(hoy); if (!fechaValida(b) || b < a) b = sumarDias(a, 6);
+      if (diasEntre(a, b) > 92) b = sumarDias(a, 92);
+      return [a, b];
+    }
+    return [lunesDe(hoy), sumarDias(lunesDe(hoy), 6)];
+  }
+
+  // Números de un conjunto de guardias
+  function resumen(lista) {
+    const cub = lista.filter(g => g.personal);
+    const horas = lista.reduce((s, g) => s + horasDe(g), 0), horasCub = cub.reduce((s, g) => s + horasDe(g), 0);
+    return { total: lista.length, cubiertas: cub.length, vacantes: lista.length - cub.length, pct: pct(cub.length, lista.length),
+      horas: Math.round(horas), horasCub: Math.round(horasCub), personas: new Set(cub.map(g => g.personal)).size };
+  }
+  const claseCobertura = p => p >= 90 ? 'ok' : p >= 75 ? 'warn' : 'mal';
+
+  async function pintarInicio(refresco) {
+    segElegirChips();
+    const [desde, hasta] = rangoPeriodo(periodoInicio);
+    if (periodoInicio === 'otro') { $('#ini-desde').value = desde; $('#ini-hasta').value = hasta; }
+    $('#ini-rango').classList.toggle('hidden', periodoInicio !== 'otro');
+    $('#ini-sub').textContent = 'Cobertura de guardias ' + textoRango(desde, hasta);
+    if (!$('#ini-kpis').children.length) $('#ini-kpis').innerHTML = esqueletos(4);
+    sync('inicio', refresco ? '' : 'Cargando…');
+    let lista, proximas;
+    try {
+      const hoy = hoyISO();
+      [lista, proximas] = await Promise.all([traerGuardias(desde, hasta), traerGuardias(sumarDias(hoy, -1), sumarDias(hoy, 2))]);
+    } finally { sync('inicio', ''); }
+    if (vistaActual !== 'inicio') return;
+    const activas = new Set(lineasActivas().map(l => l.id));
+    lista = lista.filter(g => activas.has(g.linea));
+    const r = resumen(lista);
+
+    $('#ini-kpis').innerHTML = [
+      `<div class="kpi"><b>${r.total}</b><span>Guardias</span><small>${r.horas.toLocaleString('es-AR')} h programadas</small></div>`,
+      `<div class="kpi ok"><b>${r.cubiertas}</b><span>Cubiertas</span><small>${r.personas} personas asignadas</small></div>`,
+      `<div class="kpi ${r.vacantes ? 'mal' : 'ok'}"><b>${r.vacantes}</b><span>Vacantes</span><small>${(r.horas - r.horasCub).toLocaleString('es-AR')} h sin cubrir</small></div>`,
+      `<div class="kpi acento"><b>${r.pct}%</b><span>Cobertura</span><small>${claseCobertura(r.pct) === 'ok' ? 'En objetivo (90 % o más)' : 'Por debajo del 90 %'}</small></div>`,
+    ].join('');
+
+    // por línea
+    $('#ini-lineas').innerHTML = lineasActivas().map(l => {
+      const s = resumen(lista.filter(g => g.linea === l.id));
+      return `<button type="button" class="linea-card" data-linea="${esc(l.id)}" style="--c:${esc(l.color)}">
+        <span class="anillo" style="--p:${s.pct}"><span>${s.total ? s.pct + '%' : '—'}</span></span>
+        <span><b>${esc(l.nombre)}</b><small>${plural(s.total, 'guardia', 'guardias')} · ${s.cubiertas} cubiertas</small>
+        <small class="${s.vacantes ? 'mal' : ''}">${s.vacantes ? plural(s.vacantes, 'vacante', 'vacantes') : 'Sin vacantes'}</small></span></button>`;
+    }).join('') || '<div class="vacio">No hay líneas activas.</div>';
+
+    // por tipo de personal
+    $('#ini-tipos').innerHTML = '<div class="barras">' + TIPOS.map(t => {
+      const s = resumen(lista.filter(g => g.tipo === t));
+      return `<div class="barra-fila"><em>${TIPO_PLURAL[t]}</em><span class="pista"><i style="width:${s.pct}%"></i></span><span>${s.cubiertas}/${s.total} · ${s.pct}%</span></div>`;
+    }).join('') + '</div>';
+
+    // bases con más vacantes
+    const porBase = {};
+    lista.forEach(g => { const b = porBase[g.base] || (porBase[g.base] = { total: 0, vac: 0 }); b.total++; if (!g.personal) b.vac++; });
+    const top = Object.entries(porBase).filter(([, v]) => v.vac).sort((a, b) => b[1].vac - a[1].vac).slice(0, 8);
+    const max = top.length ? top[0][1].vac : 1;
+    $('#ini-bases').innerHTML = top.length ? '<div class="barras">' + top.map(([id, v]) =>
+      `<div class="barra-fila" title="${esc(nombreLinea((basePorId[id] || {}).linea))}"><em>${esc(nombreBase(id))}</em><span class="pista solo"><i style="width:${pct(v.vac, max)}%"></i></span><span>${v.vac} de ${v.total}</span></div>`).join('') + '</div>'
+      : '<div class="vacio"><b>Sin vacantes</b>Todas las bases están cubiertas en el período.</div>';
+
+    // día por día
+    const dias = Math.min(diasEntre(desde, hasta) + 1, 31);
+    $('#ini-dias').innerHTML = dias < 2 ? '<p class="ayuda sin-mt">Elegí un período de más de un día para ver la evolución.</p>' : (() => {
+      const cols = [], maxDia = Math.max(1, ...Array.from({ length: dias }, (_, i) => lista.filter(g => g.fecha === sumarDias(desde, i)).length));
+      for (let i = 0; i < dias; i++) {
+        const f = sumarDias(desde, i), s = resumen(lista.filter(g => g.fecha === f));
+        const c = claseCobertura(s.pct);
+        cols.push(`<div class="col" title="${fechaCorta(f)}: ${s.cubiertas} de ${s.total} cubiertas (${s.pct}%)"><i class="${c === 'ok' ? '' : c === 'warn' ? 'medio' : 'mal'}" style="height:${pct(s.total, maxDia)}%"></i><small>${dias <= 8 ? DIAS_CORTOS[diaSemana(f)] : f.slice(8)}</small></div>`);
+      }
+      return `<div class="dias-barras">${cols.join('')}</div><p class="ayuda">Alto de la barra: guardias del día. Verde 90 % o más cubiertas, amarillo 75 %, rojo menos.</p>`;
+    })();
+
+    // próximas vacantes (desde ahora hasta 48 h)
+    const ahora = ahoraMs(), limite = ahora + 48 * 3600e3;
+    const prox = proximas.filter(g => !g.personal && activas.has(g.linea)).map(g => ({ g, iv: intervalo(g) }))
+      .filter(x => x.iv[1] > ahora && x.iv[0] < limite).sort((a, b) => a.iv[0] - b.iv[0]);
+    $('#ini-proximas').innerHTML = prox.length ? `<p class="ayuda sin-mt" style="margin-bottom:6px">${plural(prox.length, 'guardia sin cubrir', 'guardias sin cubrir')}</p><div class="lista-scroll">` + prox.slice(0, 60).map(({ g, iv }) => `
+      <div class="vacante-fila"><span class="cuando">${iv[0] <= ahora ? '<span class="pill mal">Ahora</span>' : esc(fechaCorta(g.fecha))}<small>${esc(textoHorario(g))} h</small></span>
+        <span class="que"><b>${esc(nombreBase(g.base))}</b><small>${esc(nombreLinea(g.linea))} · <span class="pill t-${esc(g.tipo)}">${esc(g.tipo)}</span></small></span>
+        ${permisos.editarGuardias ? `<button class="btn chico" type="button" data-asignar="${esc(g.id)}">Asignar</button>` : ''}</div>`).join('') + '</div>'
+      : '<div class="vacio"><b>Todo cubierto</b>No hay guardias vacantes en las próximas 48 horas.</div>';
+    proximasInicio = prox.map(x => x.g);
+  }
+  let proximasInicio = [];
+
+  function segElegirChips() { $$('#ini-periodo button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.p === periodoInicio))); }
+  $('#ini-periodo').addEventListener('click', e => {
+    const b = e.target.closest('button[data-p]'); if (!b) return;
+    periodoInicio = b.dataset.p; try { localStorage.setItem('periodo_inicio', periodoInicio); } catch {}
+    pintarInicio();
+  });
+  ['#ini-desde', '#ini-hasta'].forEach(s => $(s).addEventListener('change', () => pintarInicio()));
+  $('#ini-lineas').addEventListener('click', e => {
+    const b = e.target.closest('[data-linea]'); if (!b) return;
+    const [desde] = rangoPeriodo(periodoInicio);
+    irA('guardias', { antes: () => { guLinea = b.dataset.linea; guLunes = lunesDe(desde); guDia = desde; } });
+  });
+  $('#ini-proximas').addEventListener('click', e => {
+    const b = e.target.closest('[data-asignar]'); if (!b) return;
+    const g = proximasInicio.find(x => x.id === b.dataset.asignar); if (g) abrirGuardia(g);
+  });
+  $('#ini-excel').addEventListener('click', async e => {
+    const [desde, hasta] = rangoPeriodo(periodoInicio);
+    await exportarGuardias(desde, hasta, null, e.currentTarget);
+  });
+
+  // ===== Guardias: grilla semanal de una línea =====
+  // Computadora: tabla con las bases en filas y los 7 días en columnas. Celular: tira de días y, para el día elegido, una
+  // tarjeta por base. Cada guardia es una "ficha": verde si está cubierta, roja punteada si está vacante.
+  let guLinea = ''; try { guLinea = localStorage.getItem('gu_linea') || ''; } catch {}
+  let guLunes = lunesDe(hoyISO()), guDia = hoyISO();
+  const guFiltro = { tipo: '', estado: '', texto: '' };
+  const ORDEN_TIPO = { 'Médico': 0, 'Enfermero': 1, 'Chofer': 2 };
+  const ordenGuardias = (a, b) => a.ingreso.localeCompare(b.ingreso) || ORDEN_TIPO[a.tipo] - ORDEN_TIPO[b.tipo];
+  let guSemana = [];   // guardias de la semana en pantalla (todas las líneas)
+
+  function pasaFiltro(g) {
+    if (guFiltro.tipo && g.tipo !== guFiltro.tipo) return false;
+    if (guFiltro.estado === 'vac' && g.personal) return false;
+    if (guFiltro.estado === 'cub' && !g.personal) return false;
+    if (guFiltro.texto) {
+      const p = personaPorId[g.personal];
+      const txt = [nombreDeGuardia(g), p && p.legajo, g.obs].join(' ').toLowerCase();
+      if (!txt.includes(guFiltro.texto)) return false;
+    }
+    return true;
+  }
+
+  const fichaHTML = g => {
+    const nombre = nombreDeGuardia(g);
+    return `<button type="button" class="g t-${esc(g.tipo)} ${g.personal ? 'cub' : 'vac'}" data-g="${esc(g.id)}" title="${esc(`${g.tipo} · ${g.ingreso} a ${g.egreso}${nombre ? ' · ' + nombre : ' · VACANTE'}${g.obs ? '\n' + g.obs : ''}`)}">
+      ${g.obs ? '<i class="g-obs"></i>' : ''}<span class="g-top"><i class="g-tipo">${TIPO_CORTO[g.tipo] || ''}</i><span class="g-hora">${esc(textoHorario(g))}</span></span>
+      <span class="g-nom">${g.personal ? esc(nombre) : 'VACANTE'}</span></button>`;
+  };
+
+  async function pintarGuardias(refresco) {
+    const activas = lineasActivas();
+    if (!activas.length) { $('#gu-grilla').innerHTML = '<div class="vacio"><b>No hay líneas activas</b>Cargalas en Líneas y bases.</div>'; return; }
+    if (!activas.some(l => l.id === guLinea)) guLinea = activas[0].id;
+    if (guDia < guLunes || guDia > sumarDias(guLunes, 6)) guDia = (hoyISO() >= guLunes && hoyISO() <= sumarDias(guLunes, 6)) ? hoyISO() : guLunes;
+    $('#gu-semana').textContent = 'Semana del ' + textoSemana(guLunes);
+    $('#gu-fecha').value = guDia;
+    if (!refresco && !guSemana.length) $('#gu-grilla').innerHTML = esqueletos(5);
+    sync('guardias', refresco ? '' : 'Cargando…');
+    const lunes = guLunes;
+    try { guSemana = await traerGuardias(lunes, sumarDias(lunes, 6)); }
+    finally { sync('guardias', ''); }
+    if (vistaActual !== 'guardias' || lunes !== guLunes) return;
+    dibujarGuardias();
+  }
+
+  function dibujarGuardias() {
+    const activas = lineasActivas(), hoy = hoyISO();
+    // pestañas de línea con las vacantes de la semana
+    $('#gu-lineas').innerHTML = activas.map(l => {
+      const vac = guSemana.filter(g => g.linea === l.id && !g.personal).length;
+      return `<button type="button" role="tab" data-linea="${esc(l.id)}" aria-selected="${l.id === guLinea}" style="--c:${esc(l.color)}"><i></i>${esc(l.nombre)}<small class="${vac ? 'mal' : ''}">${vac ? vac + ' vac.' : '✓'}</small></button>`;
+    }).join('');
+
+    const deLinea = guSemana.filter(g => g.linea === guLinea);
+    const conGuardias = new Set(deLinea.map(g => g.base));
+    const bases = basesDeLinea(guLinea, true).filter(b => b.activo || conGuardias.has(b.id));
+    const visibles = deLinea.filter(pasaFiltro);
+    const cub = deLinea.filter(g => g.personal).length;
+    $('#gu-sub').textContent = `${nombreLinea(guLinea)} · ${plural(bases.length, 'base', 'bases')}`;
+    $('#gu-resumen').innerHTML = `<span class="pill">${plural(deLinea.length, 'guardia', 'guardias')}</span><span class="pill ok">${cub} cubiertas</span>
+      <span class="pill ${deLinea.length - cub ? 'mal' : 'ok'}">${plural(deLinea.length - cub, 'vacante', 'vacantes')}</span><span class="pill">${pct(cub, deLinea.length)}% de cobertura</span>
+      ${visibles.length !== deLinea.length ? `<span class="pill warn">Filtro: se ven ${visibles.length}</span>` : ''}`;
+
+    if (!bases.length) { $('#gu-grilla').innerHTML = '<div class="vacio"><b>Esta línea no tiene bases</b>Agregalas en Líneas y bases.</div>'; $('#gu-dias').innerHTML = ''; return; }
+    const dias = Array.from({ length: 7 }, (_, i) => sumarDias(guLunes, i));
+    const puedeCrear = !!permisos.editarGuardias;
+
+    if (!esCelular()) {
+      const cab = dias.map(f => {
+        const del = deLinea.filter(g => g.fecha === f), c = del.filter(g => g.personal).length;
+        return `<th class="${f === hoy ? 'hoy' : ''}">${DIAS_CORTOS[diaSemana(f)]}<b>${f.slice(8)}</b><small>${del.length ? `${c}/${del.length} cubiertas` : 'Sin guardias'}</small><span class="cob"><i style="width:${pct(c, del.length)}%"></i></span></th>`;
+      }).join('');
+      const filas = bases.map(b => `<tr><th class="col-base"><b>${esc(b.nombre)}</b><small><span class="pill">${esc(b.tipo)}</span>${b.activo ? '' : '<span class="pill mal">De baja</span>'}</small></th>` +
+        dias.map(f => {
+          const fichas = visibles.filter(g => g.base === b.id && g.fecha === f).sort(ordenGuardias).map(fichaHTML).join('');
+          return `<td class="${f === hoy ? 'hoy' : ''}"><div class="celda">${fichas}${puedeCrear && b.activo ? `<button type="button" class="mas" data-nueva="${esc(b.id)}|${f}" aria-label="Agregar guardia en ${esc(b.nombre)} el ${fechaCorta(f)}">+ Agregar</button>` : ''}</div></td>`;
+        }).join('') + '</tr>').join('');
+      $('#gu-grilla').innerHTML = `<div class="grilla-wrap"><table class="grilla"><thead><tr><th class="col-base">Base</th>${cab}</tr></thead><tbody>${filas}</tbody></table></div>`;
+      $('#gu-dias').innerHTML = '';
+      return;
+    }
+
+    // celular
+    $('#gu-dias').innerHTML = dias.map(f => {
+      const del = deLinea.filter(g => g.fecha === f), vac = del.some(g => !g.personal);
+      return `<button type="button" data-dia="${f}" aria-selected="${f === guDia}" class="${f === hoy ? 'hoy' : ''}"><small>${DIAS_CORTOS[diaSemana(f)]}</small><b>${f.slice(8)}</b>${del.length ? `<i class="${vac ? 'mal' : ''}"></i>` : '<i style="opacity:0"></i>'}</button>`;
+    }).join('');
+    $('#gu-grilla').innerHTML = `<p class="ayuda sin-mt" style="margin-bottom:8px"><b>${esc(fechaLarga(guDia))}</b></p>` + bases.map(b => {
+      const del = visibles.filter(g => g.base === b.id && g.fecha === guDia).sort(ordenGuardias);
+      const vac = del.filter(g => !g.personal).length;
+      return `<div class="base-cel"><div class="base-cel-cab"><b>${esc(b.nombre)}</b><span>${vac ? `<span class="pill mal">${vac} vac.</span>` : del.length ? '<span class="pill ok">Cubierta</span>' : ''}</span></div>
+        <div class="lista-g">${del.map(fichaHTML).join('') || '<span class="ayuda sin-mt">Sin guardias este día</span>'}</div>
+        ${puedeCrear && b.activo ? `<button type="button" class="btn chico" style="margin-top:8px" data-nueva="${esc(b.id)}|${guDia}">+ Agregar guardia</button>` : ''}</div>`;
+    }).join('');
+  }
+
+  // ---- Eventos ----
+  $('#gu-lineas').addEventListener('click', e => {
+    const b = e.target.closest('button[data-linea]'); if (!b) return;
+    guLinea = b.dataset.linea; try { localStorage.setItem('gu_linea', guLinea); } catch {}
+    dibujarGuardias();
+  });
+  const irASemana = lunes => { guLunes = lunes; pintarGuardias(); };
+  $('#gu-ant').addEventListener('click', () => { guDia = sumarDias(guDia, -7); irASemana(sumarDias(guLunes, -7)); });
+  $('#gu-sig').addEventListener('click', () => { guDia = sumarDias(guDia, 7); irASemana(sumarDias(guLunes, 7)); });
+  $('#gu-hoy').addEventListener('click', () => { guDia = hoyISO(); irASemana(lunesDe(hoyISO())); });
+  $('#gu-fecha').addEventListener('change', e => { if (!fechaValida(e.target.value)) return; guDia = e.target.value; irASemana(lunesDe(guDia)); });
+  $('#gu-dias').addEventListener('click', e => { const b = e.target.closest('[data-dia]'); if (b) { guDia = b.dataset.dia; dibujarGuardias(); } });
+  segAlTocar($('#gu-tipo'), v => { guFiltro.tipo = v; dibujarGuardias(); });
+  segAlTocar($('#gu-estado'), v => { guFiltro.estado = v; dibujarGuardias(); });
+  $('#gu-buscar').addEventListener('input', debounce(e => { guFiltro.texto = e.target.value.trim().toLowerCase(); dibujarGuardias(); }, 180));
+  $('#gu-grilla').addEventListener('click', e => {
+    const f = e.target.closest('[data-g]');
+    if (f) { const g = guSemana.find(x => x.id === f.dataset.g); if (g) abrirGuardia(g); return; }
+    const n = e.target.closest('[data-nueva]');
+    if (n) { const [base, fecha] = n.dataset.nueva.split('|'); abrirGuardia(null, { base, fecha }); }
+  });
+  $('#gu-nueva').addEventListener('click', () => abrirGuardia(null, { linea: guLinea, fecha: esCelular() ? guDia : (hoyISO() >= guLunes && hoyISO() <= sumarDias(guLunes, 6) ? hoyISO() : guLunes) }));
+  $('#gu-excel').addEventListener('click', e => exportarGuardias(guLunes, sumarDias(guLunes, 6), guLinea, e.currentTarget));
+  $('#gu-copiar').addEventListener('click', () => abrirCopiar());
+
+  // ===== Ventana de guardia: alta, edición, asignación y eliminación =====
+  // abrirGuardia(g) edita una guardia existente; abrirGuardia(null, { fecha, base, linea }) abre una nueva con esos datos.
+  // Al buscar personal, cada persona muestra si está libre o si ya tiene una guardia que se superpone (con lo que la app
+  // ya tiene en memoria; el script lo vuelve a controlar al guardar).
+  let edGuardia = null, edPersona = '';
+  const sinAcentos = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  function abrirGuardia(g, preset) {
+    const p = preset || {};
+    edGuardia = g || null;
+    const puede = !!permisos.editarGuardias;
+    const base = g ? basePorId[g.base] : (p.base ? basePorId[p.base] : null);
+    const linea = g ? g.linea : (base ? base.linea : (p.linea || guLinea || (lineasActivas()[0] || {}).id));
+    $('#mg-titulo').textContent = g ? (puede ? 'Editar guardia' : 'Guardia') : 'Nueva guardia';
+    $('#mg-subtitulo').textContent = g ? `${nombreLinea(g.linea)} · ${nombreBase(g.base)}` : 'Completá los datos y asigná a alguien, o dejala vacante';
+    $('#mg-fecha').value = g ? g.fecha : (p.fecha || hoyISO());
+    llenarLineas(linea);
+    llenarBases(linea, g ? g.base : (p.base || ''));
+    segElegir($('#mg-tipo'), g ? g.tipo : (p.tipo || 'Médico'));
+    $('#mg-ing').value = g ? g.ingreso : '07:00';
+    $('#mg-egr').value = g ? g.egreso : '19:00';
+    $('#mg-obs').value = g ? (g.obs || '') : '';
+    elegirPersona(g ? g.personal : '');
+    $('#mg-meta').innerHTML = g ? [g.creado && `Creada por ${esc(g.creadoPor)} el ${esc(fechaHora(g.creado))}`, g.modificado && `Modificada por ${esc(g.modificadoPor)} el ${esc(fechaHora(g.modificado))}`].filter(Boolean).join('<br>') : '';
+    $('#mg-eliminar').classList.toggle('hidden', !(g && permisos.eliminarGuardias));
+    $('#mg-guardar').classList.toggle('hidden', !puede);
+    $$('#m-guardia .caja-cuerpo input, #m-guardia .caja-cuerpo select, #m-guardia .caja-cuerpo textarea').forEach(el => { el.disabled = !puede; });
+    $('#mg-tipo').classList.toggle('bloqueado', !puede); $('#mg-turnos').classList.toggle('bloqueado', !puede);
+    $$('#m-guardia .campo.invalido').forEach(c => c.classList.remove('invalido'));
+    actualizarHorario();
+    abrirVentana('m-guardia');
+    // para avisar superposiciones hacen falta las guardias del día anterior y el siguiente
+    const f = $('#mg-fecha').value;
+    if (fechaValida(f)) traerGuardias(sumarDias(f, -1), sumarDias(f, 1)).then(revisarDisponibilidad).catch(() => {});
+  }
+  const fechaHora = t => { const m = String(t).match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]} ${m[4]}` : t; };
+
+  function llenarLineas(sel) {
+    const lineas = cat.lineas.filter(l => l.activo || l.id === sel);
+    $('#mg-linea').innerHTML = lineas.map(l => `<option value="${esc(l.id)}" ${l.id === sel ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('');
+  }
+  function llenarBases(linea, sel) {
+    const bases = basesDeLinea(linea, true).filter(b => b.activo || b.id === sel);
+    $('#mg-base').innerHTML = '<option value="">Elegí la base…</option>' + bases.map(b => `<option value="${esc(b.id)}" ${b.id === sel ? 'selected' : ''}>${esc(b.nombre)} · ${esc(b.tipo)}</option>`).join('');
+  }
+  $('#mg-linea').addEventListener('change', e => llenarBases(e.target.value, ''));
+
+  // ---- Horario ----
+  $('#mg-turnos').innerHTML = TURNOS_RAPIDOS.map(([a, b]) => `<button type="button" data-t="${a}|${b}">${a === b ? `24 h (${a.slice(0, 2)} a ${b.slice(0, 2)})` : `${a.slice(0, 2)} a ${b.slice(0, 2)}`}</button>`).join('');
+  $('#mg-turnos').addEventListener('click', e => {
+    const b = e.target.closest('button[data-t]'); if (!b || $('#mg-turnos').classList.contains('bloqueado')) return;
+    const [a, c] = b.dataset.t.split('|'); $('#mg-ing').value = a; $('#mg-egr').value = c; actualizarHorario();
+  });
+  function actualizarHorario() {
+    const f = $('#mg-fecha').value, ing = $('#mg-ing').value, egr = $('#mg-egr').value;
+    $('#mg-dia').textContent = fechaValida(f) ? fechaLarga(f) : '';
+    $$('#mg-turnos button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === `${ing}|${egr}`)));
+    if (horaValida(ing) && horaValida(egr)) {
+      const h = horasDe({ ingreso: ing, egreso: egr }), sigue = minutos(egr) <= minutos(ing);
+      $('#mg-dur').textContent = `${String(h).replace('.', ',')} h${sigue && fechaValida(f) ? ` · termina el ${fechaCorta(sumarDias(f, 1))}` : ''}`;
+    } else $('#mg-dur').textContent = '';
+    revisarDisponibilidad();
+  }
+  ['#mg-fecha', '#mg-ing', '#mg-egr'].forEach(s => $(s).addEventListener('input', actualizarHorario));
+  $('#mg-fecha').addEventListener('change', () => { const f = $('#mg-fecha').value; if (fechaValida(f)) traerGuardias(sumarDias(f, -1), sumarDias(f, 1)).then(revisarDisponibilidad).catch(() => {}); });
+
+  // ---- Personal ----
+  // la guardia que se está editando, con lo que hay escrito en la ventana
+  function datosVentana() {
+    return { id: edGuardia ? edGuardia.id : '', fecha: $('#mg-fecha').value, ingreso: $('#mg-ing').value, egreso: $('#mg-egr').value };
+  }
+  function choqueDe(personaId, d) {
+    if (!personaId || !fechaValida(d.fecha) || !horaValida(d.ingreso) || !horaValida(d.egreso)) return null;
+    const [a0, a1] = intervalo(d);
+    return guardiasConocidas().find(g => g.personal === personaId && g.id !== d.id && Math.abs(diasEntre(g.fecha, d.fecha)) <= 1 && (() => {
+      const [b0, b1] = intervalo(g); return a0 < b1 && b0 < a1;
+    })()) || null;
+  }
+  const textoChoque = g => `${fechaCorta(g.fecha)} ${textoHorario(g)} en ${nombreBase(g.base)}`;
+  const etiquetaPersona = p => `${nombrePersona(p)} · Leg. ${p.legajo}`;
+
+  function elegirPersona(id) {
+    edPersona = id || '';
+    const p = personaPorId[edPersona];
+    $('#mg-persona').value = p ? etiquetaPersona(p) : (id && edGuardia ? edGuardia.asignado : '');
+    $('#mg-limpiar').classList.toggle('hidden', !edPersona || !permisos.editarGuardias);
+    cerrarSugerencias();
+    revisarDisponibilidad();
+  }
+  function revisarDisponibilidad() {
+    const av = $('#mg-aviso'), p = personaPorId[edPersona];
+    if (!edPersona) { av.className = 'aviso'; av.textContent = 'Sin persona asignada: la guardia queda VACANTE.'; return; }
+    const tipo = segValor($('#mg-tipo'));
+    const choque = choqueDe(edPersona, datosVentana());
+    const avisos = [];
+    if (choque) avisos.push(`Ya tiene una guardia que se superpone: ${textoChoque(choque)}.`);
+    if (p && !p.activo) avisos.push(`${nombrePersona(p)} está dado de baja.`);
+    if (p && tipo && p.tipo !== tipo) avisos.push(`Es ${p.tipo.toLowerCase()} y la guardia es de ${tipo.toLowerCase()}.`);
+    av.className = 'aviso ' + (choque ? 'mal' : avisos.length ? '' : 'ok');
+    av.textContent = avisos.length ? avisos.join(' ') : `${p ? nombrePersona(p) : 'La persona'} está libre en ese horario${p && p.contratacion ? ` · ${p.contratacion}` : ''}.`;
+    av.classList.remove('hidden');
+  }
+
+  let sugActiva = -1, sugIds = [];
+  function mostrarSugerencias() {
+    if (!permisos.editarGuardias) return;
+    const q = sinAcentos($('#mg-persona').value.replace(/ · Leg\. .*$/, '')).trim();
+    const tipo = segValor($('#mg-tipo')), d = datosVentana();
+    const coincide = p => !q || sinAcentos(`${p.apellido} ${p.nombre} ${p.nombre} ${p.apellido} ${p.legajo}`).includes(q);
+    const lista = cat.personal.filter(p => p.activo && coincide(p)).sort((a, b) => a.apellido.localeCompare(b.apellido, 'es') || a.nombre.localeCompare(b.nombre, 'es'));
+    const mismos = lista.filter(p => p.tipo === tipo), otros = lista.filter(p => p.tipo !== tipo);
+    const marcar = t => { if (!q) return esc(t); const i = sinAcentos(t).indexOf(q); return i < 0 ? esc(t) : esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length)); };
+    const fila = p => {
+      const ch = choqueDe(p.id, d);
+      return `<button type="button" class="sug" role="option" data-p="${esc(p.id)}"><span class="avatar t-${esc(p.tipo)}">${esc(iniciales(p.apellido, p.nombre))}</span>
+        <span class="datos"><b>${marcar(nombrePersona(p))}</b><small>Leg. ${marcar(p.legajo)} · ${esc(p.tipo)}${p.contratacion ? ' · ' + esc(p.contratacion) : ''}</small></span>
+        ${ch ? `<span class="pill mal" title="${esc(textoChoque(ch))}">Ocupado</span>` : '<span class="pill ok">Libre</span>'}</button>`;
+    };
+    const partes = [];
+    if (mismos.length) partes.push(`<div class="sec">${esc(TIPO_PLURAL[tipo] || 'Mismo tipo')}</div>` + mismos.slice(0, 40).map(fila).join(''));
+    if (otros.length && (q || !mismos.length)) partes.push('<div class="sec">Otros tipos</div>' + otros.slice(0, 20).map(fila).join(''));
+    sugIds = [...mismos.slice(0, 40), ...((q || !mismos.length) ? otros.slice(0, 20) : [])].map(p => p.id);
+    sugActiva = -1;
+    $('#mg-sug').innerHTML = partes.join('') || '<div class="sec">Nadie coincide con esa búsqueda</div>';
+    $('#mg-sug').classList.remove('hidden');
+  }
+  function cerrarSugerencias() { $('#mg-sug').classList.add('hidden'); sugActiva = -1; }
+  $('#mg-persona').addEventListener('focus', mostrarSugerencias);
+  $('#mg-persona').addEventListener('input', () => { edPersona = ''; $('#mg-limpiar').classList.add('hidden'); mostrarSugerencias(); revisarDisponibilidad(); });
+  $('#mg-persona').addEventListener('keydown', e => {
+    const caja = $('#mg-sug'); if (caja.classList.contains('hidden')) return;
+    const filas = $$('.sug', caja);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault(); sugActiva = Math.max(0, Math.min(filas.length - 1, sugActiva + (e.key === 'ArrowDown' ? 1 : -1)));
+      filas.forEach((f, i) => f.classList.toggle('activa', i === sugActiva)); if (filas[sugActiva]) filas[sugActiva].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter' && sugActiva >= 0 && filas[sugActiva]) { e.preventDefault(); elegirPersona(filas[sugActiva].dataset.p); }
+    else if (e.key === 'Escape') { e.stopPropagation(); cerrarSugerencias(); }
+  });
+  $('#mg-sug').addEventListener('mousedown', e => { const b = e.target.closest('.sug'); if (b) { e.preventDefault(); elegirPersona(b.dataset.p); } });
+  $('#mg-persona').addEventListener('blur', () => setTimeout(cerrarSugerencias, 150));
+  $('#mg-limpiar').addEventListener('click', () => { elegirPersona(''); $('#mg-persona').focus(); });
+  segAlTocar($('#mg-tipo'), () => revisarDisponibilidad());
+
+  // ---- Guardar y eliminar ----
+  $('#mg-guardar').addEventListener('click', async e => {
+    const d = { ...datosVentana(), base: $('#mg-base').value, tipo: segValor($('#mg-tipo')), personal: edPersona, obs: $('#mg-obs').value.trim() };
+    if (!fechaValida(d.fecha)) return marcarInvalido($('#mg-fecha'), 'Elegí la fecha');
+    if (!d.base) return marcarInvalido($('#mg-base'), 'Elegí la base');
+    if (!d.tipo) return marcarInvalido($('#mg-tipo'), 'Elegí el tipo de guardia');
+    if (!horaValida(d.ingreso)) return marcarInvalido($('#mg-ing'), 'Completá la hora de ingreso');
+    if (!horaValida(d.egreso)) return marcarInvalido($('#mg-egr'), 'Completá la hora de egreso');
+    if (!edPersona && $('#mg-persona').value.trim()) return marcarInvalido($('#mg-persona'), 'Elegí a la persona de la lista, o borrá el texto para dejarla vacante');
+    if (edGuardia) d.version = edGuardia.modificado || edGuardia.creado;
+    if (!d.id) delete d.id;
+    try {
+      await escribir('guardarGuardia', { guardia: d }, { boton: e.currentTarget, ok: edGuardia ? 'Guardia actualizada' : (d.personal ? 'Guardia creada y asignada' : 'Guardia vacante creada') });
+      cerrarVentana('m-guardia');
+    } catch {}
+  });
+  $('#mg-eliminar').addEventListener('click', async e => {
+    if (!edGuardia) return;
+    const g = edGuardia;
+    const ok = await confirmar(`¿Eliminar esta guardia?\n${fechaLarga(g.fecha)} · ${g.ingreso} a ${g.egreso}\n${nombreBase(g.base)} · ${g.tipo} · ${nombreDeGuardia(g) || 'VACANTE'}\n\nQueda registrada en el Historial.`, { ok: 'Eliminar', peligro: true });
+    if (!ok) return;
+    try { await escribir('eliminarGuardia', { id: g.id }, { boton: e.currentTarget, textoEspera: 'Eliminando…', ok: 'Guardia eliminada' }); cerrarVentana('m-guardia'); } catch {}
+  });
+
+  // ===== Copiar semana =====
+  // Arma la semana siguiente a partir de una que ya está cargada: mismas bases, horarios y personas. Las fechas que se
+  // elijan se llevan al lunes de su semana.
+  function abrirCopiar() {
+    $('#mc-linea').innerHTML = '<option value="">Todas las líneas</option>' + lineasActivas().map(l => `<option value="${esc(l.id)}" ${l.id === guLinea ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('');
+    $('#mc-origen').value = guLunes; $('#mc-destino').value = sumarDias(guLunes, 7);
+    infoCopiar();
+    abrirVentana('m-copiar');
+  }
+  function infoCopiar() {
+    const o = $('#mc-origen').value, d = $('#mc-destino').value;
+    if (!fechaValida(o) || !fechaValida(d)) { $('#mc-info').textContent = ''; return; }
+    const lo = lunesDe(o), ld = lunesDe(d);
+    $('#mc-info').innerHTML = `Semana del <b>${esc(textoSemana(lo))}</b> → semana del <b>${esc(textoSemana(ld))}</b>.`;
+  }
+  ['#mc-origen', '#mc-destino'].forEach(s => $(s).addEventListener('change', infoCopiar));
+  $('#mc-ok').addEventListener('click', async e => {
+    const o = $('#mc-origen').value, d = $('#mc-destino').value, linea = $('#mc-linea').value;
+    if (!fechaValida(o)) return marcarInvalido($('#mc-origen'), 'Elegí la semana de origen');
+    if (!fechaValida(d)) return marcarInvalido($('#mc-destino'), 'Elegí la semana destino');
+    const datos = { origen: lunesDe(o), destino: lunesDe(d), linea };
+    if (datos.origen === datos.destino) return marcarInvalido($('#mc-destino'), 'Elegí una semana distinta');
+    const aviso = r => `Se copiaron ${plural(r.creadas, 'guardia', 'guardias')}` + (r.vacantes ? ` (${r.vacantes} quedaron vacantes por superposición o baja)` : '');
+    try {
+      await escribir('copiarSemana', datos, { boton: e.currentTarget, textoEspera: 'Copiando…', ok: aviso, silencioso: true });
+    } catch (err) {
+      if (!(err.datos && err.datos.existentes)) { toast(err.message, 'err'); return; }
+      const seguir = await confirmar(`La semana destino ya tiene ${plural(err.datos.existentes, 'guardia cargada', 'guardias cargadas')}${linea ? ' en esa línea' : ''}.\n\nSi copiás igual, se suman a las que ya están (no se borra nada). ¿Copiar igual?`, { ok: 'Copiar igual' });
+      if (!seguir) return;
+      try { await escribir('copiarSemana', { ...datos, forzar: true }, { boton: e.currentTarget, textoEspera: 'Copiando…', ok: aviso }); } catch { return; }
+    }
+    cerrarVentana('m-copiar');
+    if (linea) guLinea = linea;
+    guLunes = datos.destino; guDia = datos.destino;
+    if (vistaActual === 'guardias') pintarGuardias();
+  });
+
+  // ===== Personal =====
+  const peFiltro = { tipo: '', estado: 'activos', texto: '' };
+  let pePersona = null;
+
+  async function pintarPersonal(refresco) {
+    // guardias de los próximos 7 días por persona (para ver la carga de cada uno)
+    const hoy = hoyISO();
+    let prox = [];
+    if (!refresco) sync('personal', 'Cargando…');
+    try { prox = await traerGuardias(hoy, sumarDias(hoy, 6)); } catch {} finally { sync('personal', ''); }
+    if (vistaActual !== 'personal') return;
+    const porPersona = {};
+    prox.forEach(g => { if (g.personal) porPersona[g.personal] = (porPersona[g.personal] || 0) + 1; });
+    const q = sinAcentos(peFiltro.texto);
+    const lista = cat.personal
+      .filter(p => (!peFiltro.tipo || p.tipo === peFiltro.tipo) && (peFiltro.estado === '' || (peFiltro.estado === 'activos') === p.activo))
+      .filter(p => !q || sinAcentos(`${p.apellido} ${p.nombre} ${p.nombre} ${p.apellido} ${p.legajo}`).includes(q))
+      .sort((a, b) => a.apellido.localeCompare(b.apellido, 'es') || a.nombre.localeCompare(b.nombre, 'es'));
+    const puede = !!permisos.editarPersonal;
+    const cuenta = TIPOS.map(t => `${cat.personal.filter(p => p.activo && p.tipo === t).length} ${TIPO_PLURAL[t].toLowerCase()}`).join(' · ');
+    $('#v-personal .lead').textContent = `${cuenta} activos.`;
+    $('#pe-lista').innerHTML = lista.length ? lista.map(p => {
+      const n = porPersona[p.id] || 0;
+      return `<div class="item ${p.activo ? '' : 'baja'} ${puede ? 'clic' : ''}" data-p="${esc(p.id)}">
+        <span class="avatar t-${esc(p.tipo)}">${esc(iniciales(p.apellido, p.nombre))}</span>
+        <div class="datos"><b>${esc(nombrePersona(p))}</b><small>Leg. ${esc(p.legajo)}${p.celular ? ' · ' + esc(p.celular) : ''}${p.contratacion ? ' · ' + esc(p.contratacion) : ''}</small></div>
+        <div class="etiquetas"><span class="pill t-${esc(p.tipo)}">${esc(p.tipo)}</span>${p.activo ? `<span class="pill ${n ? 'ok' : ''}" title="Guardias asignadas en los próximos 7 días">${plural(n, 'guardia', 'guardias')} en 7 días</span>` : '<span class="pill mal">De baja</span>'}</div>
+      </div>`;
+    }).join('') : `<div class="vacio"><b>Nadie coincide</b>${cat.personal.length ? 'Probá con otro filtro o búsqueda.' : 'Todavía no hay personal cargado.'}</div>`;
+  }
+
+  segAlTocar($('#pe-tipo'), v => { peFiltro.tipo = v; pintarPersonal(true); });
+  segAlTocar($('#pe-estado'), v => { peFiltro.estado = v; pintarPersonal(true); });
+  $('#pe-buscar').addEventListener('input', debounce(e => { peFiltro.texto = e.target.value.trim(); pintarPersonal(true); }, 180));
+  $('#pe-lista').addEventListener('click', e => { const f = e.target.closest('[data-p]'); if (f && permisos.editarPersonal) abrirPersona(personaPorId[f.dataset.p]); });
+  $('#pe-nueva').addEventListener('click', () => abrirPersona(null));
+  $('#pe-excel').addEventListener('click', e => exportarPersonal(e.currentTarget));
+
+  function abrirPersona(p) {
+    pePersona = p || null;
+    $('#mp-titulo').textContent = p ? 'Editar persona' : 'Agregar persona';
+    segElegir($('#mp-tipo'), p ? p.tipo : (peFiltro.tipo || 'Médico'));
+    $('#mp-apellido').value = p ? p.apellido : ''; $('#mp-nombre').value = p ? p.nombre : '';
+    $('#mp-legajo').value = p ? p.legajo : ''; $('#mp-celular').value = p ? (p.celular || '') : '';
+    const opciones = [...new Set([...(cat.contrataciones || []), ...(p && p.contratacion ? [p.contratacion] : [])])];
+    $('#mp-contratacion').innerHTML = '<option value="">Sin especificar</option>' + opciones.map(c => `<option ${p && p.contratacion === c ? 'selected' : ''}>${esc(c)}</option>`).join('');
+    $('#mp-estado').classList.toggle('hidden', !p);
+    $('#mp-estado').textContent = p && !p.activo ? 'Reactivar' : 'Dar de baja';
+    $('#mp-estado').className = 'btn ' + (p && !p.activo ? '' : 'peligro-suave');
+    $$('#m-persona .campo.invalido').forEach(c => c.classList.remove('invalido'));
+    abrirVentana('m-persona');
+  }
+  $('#mp-guardar').addEventListener('click', async e => {
+    const d = { id: pePersona ? pePersona.id : undefined, tipo: segValor($('#mp-tipo')), apellido: $('#mp-apellido').value.trim(), nombre: $('#mp-nombre').value.trim(),
+      legajo: $('#mp-legajo').value.trim(), celular: $('#mp-celular').value.trim(), contratacion: $('#mp-contratacion').value };
+    if (d.apellido.length < 2) return marcarInvalido($('#mp-apellido'), 'Completá el apellido');
+    if (d.nombre.length < 2) return marcarInvalido($('#mp-nombre'), 'Completá el nombre');
+    if (!d.legajo) return marcarInvalido($('#mp-legajo'), 'Completá el legajo');
+    try { await escribir('guardarPersonal', { persona: d }, { boton: e.currentTarget, ok: pePersona ? 'Datos guardados' : 'Persona agregada' }); cerrarVentana('m-persona'); } catch {}
+  });
+  $('#mp-estado').addEventListener('click', async e => {
+    const p = pePersona; if (!p) return;
+    const btn = e.currentTarget;
+    if (!p.activo) {
+      try { await escribir('estadoPersonal', { id: p.id, activo: true }, { boton: btn, ok: `${nombrePersona(p)} reactivado` }); cerrarVentana('m-persona'); } catch {}
+      return;
+    }
+    if (!await confirmar(`¿Dar de baja a ${nombrePersona(p)}?\nNo va a aparecer para asignar guardias. Sus guardias pasadas quedan.`, { ok: 'Dar de baja', peligro: true })) return;
+    try {
+      await escribir('estadoPersonal', { id: p.id, activo: false }, { boton: btn, ok: 'Dado de baja', silencioso: true });
+      cerrarVentana('m-persona');
+    } catch (err) {
+      if (!(err.datos && err.datos.futuras)) { toast(err.message, 'err'); return; }
+      const n = err.datos.futuras;
+      const liberar = await confirmar(`${nombrePersona(p)} tiene ${plural(n, 'guardia asignada', 'guardias asignadas')} desde hoy en adelante.\n\n¿Dejarlas vacantes para reasignarlas?`, { ok: 'Sí, dejarlas vacantes', cancelar: 'No, mantenerlas' });
+      try {
+        await escribir('estadoPersonal', { id: p.id, activo: false, confirmado: true, liberar }, { boton: btn, ok: liberar ? `Dado de baja · ${plural(n, 'guardia quedó vacante', 'guardias quedaron vacantes')}` : 'Dado de baja' });
+        cerrarVentana('m-persona');
+      } catch {}
+    }
+  });
+
+  // ===== Líneas y bases (administrador) =====
+  let mbModo = 'base', mbItem = null;
+
+  function pintarBases() {
+    $('#ba-lista').innerHTML = cat.lineas.slice().sort((a, b) => (b.activo - a.activo) || a.nombre.localeCompare(b.nombre, 'es')).map(l => {
+      const bases = basesDeLinea(l.id, true);
+      return `<div class="panel linea-panel" style="--c:${esc(l.color)}">
+        <div class="panel-cab"><h3><i></i>${esc(l.nombre)} ${l.activo ? '' : '<span class="pill mal">De baja</span>'}</h3>
+          <span class="acc"><button class="btn chico" type="button" data-linea="${esc(l.id)}">Editar línea</button></span></div>
+        ${bases.map(b => `<div class="base-fila ${b.activo ? '' : 'baja'}"><div class="datos"><b>${esc(b.nombre)}</b><small>${esc(b.tipo)}${b.direccion ? ' · ' + esc(b.direccion) : ''}${b.activo ? '' : ' · De baja'}</small></div>
+          <span class="acc"><button class="btn chico" type="button" data-base="${esc(b.id)}">Editar</button></span></div>`).join('') || '<p class="ayuda">Sin bases todavía.</p>'}
+        <button class="btn chico" type="button" style="margin-top:10px" data-nueva-base="${esc(l.id)}">+ Agregar base</button>
+      </div>`;
+    }).join('') || '<div class="vacio"><b>No hay líneas</b>Agregá la primera.</div>';
+  }
+
+  function abrirBase(modo, item, lineaId) {
+    mbModo = modo; mbItem = item || null;
+    const esLinea = modo === 'linea';
+    $('#mb-titulo').textContent = (item ? 'Editar ' : 'Agregar ') + (esLinea ? 'línea' : 'base');
+    $('#mb-de-base').classList.toggle('hidden', esLinea); $('#mb-de-linea').classList.toggle('hidden', !esLinea);
+    $('#mb-nombre').value = item ? item.nombre : '';
+    $('#mb-nombre').placeholder = esLinea ? 'Ej.: Belgrano Norte' : 'Ej.: CRPC Constitución';
+    if (esLinea) $('#mb-color').value = item ? item.color : '#2E7D9B';
+    else {
+      const sel = item ? item.linea : lineaId;
+      $('#mb-linea').innerHTML = cat.lineas.map(l => `<option value="${esc(l.id)}" ${l.id === sel ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('');
+      $('#mb-tipo').innerHTML = (cat.tiposBase || ['CRPC', 'Móvil']).map(t => `<option ${item && item.tipo === t ? 'selected' : ''}>${esc(t)}</option>`).join('');
+      $('#mb-direccion').value = item ? (item.direccion || '') : '';
+    }
+    $('#mb-estado').classList.toggle('hidden', !item);
+    $('#mb-estado').textContent = item && !item.activo ? 'Reactivar' : 'Dar de baja';
+    $('#mb-estado').className = 'btn ' + (item && !item.activo ? '' : 'peligro-suave');
+    abrirVentana('m-base');
+  }
+  $('#ba-lista').addEventListener('click', e => {
+    const l = e.target.closest('[data-linea]'); if (l) { abrirBase('linea', lineaPorId[l.dataset.linea]); return; }
+    const b = e.target.closest('[data-base]'); if (b) { abrirBase('base', basePorId[b.dataset.base]); return; }
+    const n = e.target.closest('[data-nueva-base]'); if (n) abrirBase('base', null, n.dataset.nuevaBase);
+  });
+  $('#ba-linea').addEventListener('click', () => abrirBase('linea', null));
+
+  $('#mb-guardar').addEventListener('click', async e => {
+    const nombre = $('#mb-nombre').value.trim();
+    if (nombre.length < 2) return marcarInvalido($('#mb-nombre'), 'Escribí el nombre');
+    try {
+      if (mbModo === 'linea') await escribir('guardarLinea', { linea: { id: mbItem ? mbItem.id : undefined, nombre, color: $('#mb-color').value } }, { boton: e.currentTarget, ok: 'Línea guardada' });
+      else await escribir('guardarBase', { base: { id: mbItem ? mbItem.id : undefined, nombre, linea: $('#mb-linea').value, tipo: $('#mb-tipo').value, direccion: $('#mb-direccion').value.trim() } }, { boton: e.currentTarget, ok: 'Base guardada' });
+      cerrarVentana('m-base');
+    } catch {}
+  });
+  $('#mb-estado').addEventListener('click', async e => {
+    if (!mbItem) return;
+    const activar = !mbItem.activo, que = mbModo === 'linea' ? 'línea' : 'base';
+    if (!activar && !await confirmar(`¿Dar de baja la ${que} "${mbItem.nombre}"?\n${mbModo === 'linea' ? 'Deja de aparecer en el tablero y en la grilla.' : 'No se van a poder cargar guardias nuevas en esta base.'} Las guardias ya cargadas quedan.`, { ok: 'Dar de baja', peligro: true })) return;
+    try {
+      if (mbModo === 'linea') await escribir('guardarLinea', { linea: { id: mbItem.id, nombre: mbItem.nombre, color: mbItem.color, activo: activar } }, { boton: e.currentTarget, ok: activar ? 'Línea reactivada' : 'Línea dada de baja' });
+      else await escribir('estadoBase', { id: mbItem.id, activo: activar }, { boton: e.currentTarget, ok: activar ? 'Base reactivada' : 'Base dada de baja' });
+      cerrarVentana('m-base');
+    } catch {}
+  });
+
+  // ===== Usuarios (administrador) =====
+  let usuarios = [];
+
+  async function pintarUsuarios(refresco) {
+    if (!$('#us-rol').options.length) {
+      $('#us-rol').innerHTML = cat.roles.map(r => `<option ${r === 'Operador' ? 'selected' : ''}>${esc(r)}</option>`).join('');
+      $('#us-roles').innerHTML = cat.roles.map(r => `<div><b>${esc(r)}:</b> ${esc(DESCRIPCION_ROLES[r] || '')}</div>`).join('');
+    }
+    if (!usuarios.length) $('#us-lista').innerHTML = esqueletos(3);
+    sync('usuarios', refresco ? '' : 'Cargando…');
+    try { usuarios = (await api('usuarios')).usuarios; } finally { sync('usuarios', ''); }
+    if (vistaActual !== 'usuarios') return;
+    const orden = u => (u.estado === 'activo' ? 0 : 1);
+    $('#us-lista').innerHTML = usuarios.slice().sort((a, b) => orden(a) - orden(b) || cat.roles.indexOf(a.rol) - cat.roles.indexOf(b.rol) || a.apellido.localeCompare(b.apellido, 'es')).map(u => {
+      const yo = u.id === sesion.id, activo = u.estado === 'activo';
+      const estado = !activo ? '<span class="pill mal">De baja</span>' : !u.conPin ? `<span class="pill warn">${u.codigoVigente ? 'Esperando que elija su PIN' : 'Código vencido'}</span>` : u.codigoVigente ? '<span class="pill warn">Código para cambiar PIN</span>' : '<span class="pill ok">Activo</span>';
+      return `<div class="item ${activo ? '' : 'baja'}" data-u="${esc(u.id)}">
+        <span class="avatar">${esc(iniciales(u.nombre, u.apellido))}</span>
+        <div class="datos"><b>${esc(u.nombre)} ${esc(u.apellido)}${yo ? ' <span class="pill">Vos</span>' : ''}</b><small>ID <b>${esc(u.id)}</b> · desde ${esc(String(u.creado || '').slice(0, 10).split('-').reverse().join('/'))}</small></div>
+        <div class="etiquetas">${estado}</div>
+        <div class="acc">
+          <select data-rol aria-label="Rol de ${esc(u.nombre)}" ${!activo ? 'disabled' : ''}>${cat.roles.map(r => `<option ${r === u.rol ? 'selected' : ''}>${esc(r)}</option>`).join('')}</select>
+          ${activo ? `<button class="btn chico" type="button" data-que="codigo" title="Genera un código para que elija un PIN nuevo">Nuevo código</button>` : ''}
+          ${yo ? '' : `<button class="btn chico ${activo ? 'peligro-suave' : ''}" type="button" data-que="${activo ? 'baja' : 'reactivar'}">${activo ? 'Dar de baja' : 'Reactivar'}</button>`}
+        </div></div>`;
+    }).join('');
+  }
+
+  // El código se ve una sola vez: se ofrece copiar un mensaje listo para mandar por WhatsApp
+  async function mostrarCodigo(u, codigo, nuevo) {
+    const link = location.origin + location.pathname;
+    const texto = `Hola ${u.nombre}, ${nuevo ? 'ya tenés usuario' : 'te habilité un PIN nuevo'} en Guardias FFCC.\nEntrá a ${link}\nID: ${u.id}\nCódigo: ${codigo}\nEscribí tu ID, tocá Entrar sin PIN, poné el código y elegí tu PIN. El código vale 7 días.`;
+    const copiar = await confirmar('', { html: `${nuevo ? 'Usuario creado' : 'Código generado'} para <b>${esc(u.nombre)} ${esc(u.apellido)}</b> · ${esc(u.rol)}<br><br>ID: <b>${esc(u.id)}</b><span class="codigo-grande">${esc(codigo.slice(0, 3))} ${esc(codigo.slice(3))}</span><span class="ayuda">Pasale el ID y el código: entra con su ID sin PIN, escribe el código y elige su PIN. Vale 7 días y se muestra una sola vez.</span>`, ok: 'Copiar mensaje', cancelar: 'Cerrar' });
+    if (copiar) { try { await navigator.clipboard.writeText(texto); toast('Mensaje copiado: pegalo en WhatsApp', 'ok'); } catch { toast('No se pudo copiar; anotá el ID y el código', 'err'); } }
+  }
+
+  $('#us-crear').addEventListener('click', async e => {
+    const nombre = $('#us-nombre').value.trim(), apellido = $('#us-apellido').value.trim(), rol = $('#us-rol').value;
+    if (nombre.length < 2) return marcarInvalido($('#us-nombre'), 'Completá el nombre');
+    if (apellido.length < 2) return marcarInvalido($('#us-apellido'), 'Completá el apellido');
+    try {
+      const r = await escribir('crearUsuario', { nombre, apellido, rol }, { boton: e.currentTarget, textoEspera: 'Creando…' });
+      $('#us-nombre').value = ''; $('#us-apellido').value = '';
+      await mostrarCodigo(r.usuario, r.codigo, true);
+    } catch {}
+  });
+  $('#us-lista').addEventListener('change', async e => {
+    const s = e.target.closest('select[data-rol]'); if (!s) return;
+    const id = s.closest('[data-u]').dataset.u;
+    try { await escribir('accionUsuario', { id, que: 'rol', rol: s.value }, { ok: 'Rol actualizado' }); } catch { pintarUsuarios(true); }
+  });
+  $('#us-lista').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-que]'); if (!b) return;
+    const u = usuarios.find(x => x.id === b.closest('[data-u]').dataset.u); if (!u) return;
+    const que = b.dataset.que, nombre = `${u.nombre} ${u.apellido}`;
+    if (que === 'baja' && !await confirmar(`¿Dar de baja a ${nombre}?\nNo va a poder entrar y se le cierran las sesiones abiertas.`, { ok: 'Dar de baja', peligro: true })) return;
+    if (que === 'codigo' && !await confirmar(`¿Generar un código nuevo para ${nombre}?\nSe le cierran las sesiones abiertas y va a poder elegir un PIN nuevo con el código.`, { ok: 'Generar código' })) return;
+    try {
+      const r = await escribir('accionUsuario', { id: u.id, que }, { boton: b, textoEspera: '…', ok: que === 'baja' ? 'Usuario dado de baja' : que === 'reactivar' ? 'Usuario reactivado' : '' });
+      if (r.codigo) await mostrarCodigo(r.usuario, r.codigo, false);
+    } catch {}
+  });
+
+  // ===== Historial =====
+  let eventos = [];
+
+  async function pintarHistorial(refresco) {
+    if (!eventos.length) $('#hi-lista').innerHTML = esqueletos(4);
+    sync('historial', refresco ? '' : 'Cargando…');
+    try { eventos = (await api('historial')).eventos; } finally { sync('historial', ''); }
+    if (vistaActual === 'historial') dibujarHistorial();
+  }
+  function dibujarHistorial() {
+    const q = sinAcentos($('#hi-buscar').value.trim());
+    const lista = eventos.filter(ev => !q || sinAcentos(`${ev.usuario} ${ev.accion} ${ev.detalle} ${ev.id}`).includes(q));
+    $('#hi-lista').innerHTML = lista.length ? lista.map(ev => {
+      const [f, h] = String(ev.fecha).split(' ');
+      return `<div class="evento"><div class="cuando">${fechaValida(f) ? esc(fechaCorta(f)) + '/' + f.slice(0, 4) : esc(f)}<br>${esc((h || '').slice(0, 5))}</div>
+        <div><b>${esc(ev.accion)}</b>${ev.id ? ` <span class="pill">${esc(ev.id)}</span>` : ''} · <span>${esc(ev.usuario)}</span>${ev.detalle ? `<div class="det">${esc(ev.detalle)}</div>` : ''}</div></div>`;
+    }).join('') : '<div class="vacio"><b>Sin eventos</b>No hay nada que coincida.</div>';
+  }
+  $('#hi-buscar').addEventListener('input', debounce(dibujarHistorial, 150));
+
+  // ===== Descargas en Excel =====
+  // La librería (SheetJS) se baja la primera vez que se usa.
+  async function exportarGuardias(desde, hasta, lineaId, boton) {
+    const textoBtn = boton ? boton.innerHTML : '';
+    if (boton) { boton.disabled = true; boton.textContent = 'Armando…'; }
+    try {
+      await cargarLib('XLSX');
+      let lista = await traerGuardias(desde, hasta);
+      if (lineaId) lista = lista.filter(g => g.linea === lineaId);
+      if (!lista.length) { toast('No hay guardias en ese período', 'err'); return; }
+      lista = lista.slice().sort((a, b) => (a.fecha + nombreLinea(a.linea) + nombreBase(a.base) + a.ingreso).localeCompare(b.fecha + nombreLinea(b.linea) + nombreBase(b.base) + b.ingreso, 'es'));
+      const filas = lista.map(g => {
+        const p = personaPorId[g.personal];
+        return { 'Fecha': ddmmaaaa(g.fecha), 'Día': DIAS[diaSemana(g.fecha)], 'Línea': nombreLinea(g.linea), 'Base': nombreBase(g.base), 'Tipo': g.tipo,
+          'Ingreso': g.ingreso, 'Egreso': g.egreso, 'Horas': horasDe(g), 'Estado': g.personal ? 'Cubierta' : 'VACANTE',
+          'Legajo': p ? p.legajo : '', 'Personal': nombreDeGuardia(g), 'Contratación': p ? p.contratacion : '', 'Observaciones': g.obs || '', 'ID': g.id };
+      });
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(filas);
+      ws['!cols'] = [11, 10, 13, 22, 10, 8, 8, 6, 10, 9, 26, 22, 30, 9].map(w => ({ wch: w }));
+      ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: filas.length, c: 13 } }) };
+      XLSX.utils.book_append_sheet(wb, ws, 'Guardias');
+      // resumen por base
+      const porBase = {};
+      lista.forEach(g => { const k = g.base; const x = porBase[k] || (porBase[k] = { 'Línea': nombreLinea(g.linea), 'Base': nombreBase(g.base), 'Guardias': 0, 'Cubiertas': 0, 'Vacantes': 0 }); x['Guardias']++; if (g.personal) x['Cubiertas']++; else x['Vacantes']++; });
+      const resumen = Object.values(porBase).map(x => ({ ...x, '% cobertura': x['Guardias'] ? +(x['Cubiertas'] / x['Guardias']).toFixed(3) : 0 }))
+        .sort((a, b) => a['Línea'].localeCompare(b['Línea'], 'es') || a['Base'].localeCompare(b['Base'], 'es'));
+      const ws2 = XLSX.utils.json_to_sheet(resumen); ws2['!cols'] = [14, 24, 10, 10, 10, 12].map(w => ({ wch: w }));
+      XLSX.utils.book_append_sheet(wb, ws2, 'Resumen por base');
+      // vacantes
+      const vac = filas.filter(f => f['Estado'] === 'VACANTE').map(({ Legajo, Personal, 'Contratación': c, ...resto }) => resto);
+      if (vac.length) { const ws3 = XLSX.utils.json_to_sheet(vac); ws3['!cols'] = ws['!cols']; XLSX.utils.book_append_sheet(wb, ws3, 'Vacantes'); }
+      const nombre = `Guardias ${lineaId ? nombreLinea(lineaId) + ' ' : ''}${desde}${desde !== hasta ? ' al ' + hasta : ''}.xlsx`;
+      descargar(new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], { type: 'application/octet-stream' }), nombre);
+      toast('Excel descargado', 'ok');
+    } catch (e) { toast(e.message, 'err'); }
+    finally { if (boton) { boton.disabled = false; boton.innerHTML = textoBtn; } }
+  }
+
+  async function exportarPersonal(boton) {
+    const textoBtn = boton.innerHTML; boton.disabled = true; boton.textContent = 'Armando…';
+    try {
+      await cargarLib('XLSX');
+      const filas = cat.personal.slice().sort((a, b) => a.tipo.localeCompare(b.tipo) || a.apellido.localeCompare(b.apellido, 'es'))
+        .map(p => ({ 'Legajo': p.legajo, 'Apellido': p.apellido, 'Nombre': p.nombre, 'Tipo': p.tipo, 'Contratación': p.contratacion, 'Celular': p.celular, 'Estado': p.activo ? 'Activo' : 'De baja' }));
+      const wb = XLSX.utils.book_new(), ws = XLSX.utils.json_to_sheet(filas);
+      ws['!cols'] = [9, 16, 16, 11, 24, 16, 9].map(w => ({ wch: w }));
+      XLSX.utils.book_append_sheet(wb, ws, 'Personal');
+      descargar(new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], { type: 'application/octet-stream' }), `Personal ${hoyISO()}.xlsx`);
+      toast('Excel descargado', 'ok');
+    } catch (e) { toast(e.message, 'err'); }
+    finally { boton.disabled = false; boton.innerHTML = textoBtn; }
+  }
+
+  // ===== Mi cuenta: cambiar el PIN =====
+  function abrirCambioPin() {
+    ['#pin-actual', '#pin-nuevo', '#pin-nuevo2'].forEach(s => { $(s).value = ''; });
+    abrirVentana('m-pin');
+  }
+  $('#btn-pin').addEventListener('click', abrirCambioPin);
+  $('#mas-pin').addEventListener('click', abrirCambioPin);
+  $('#pin-ok').addEventListener('click', async e => {
+    const actual = $('#pin-actual').value.trim(), nuevo = $('#pin-nuevo').value.trim();
+    if (!actual) return marcarInvalido($('#pin-actual'), 'Escribí tu PIN actual');
+    if (!/^\d{4,6}$/.test(nuevo)) return marcarInvalido($('#pin-nuevo'), 'El PIN nuevo tiene que tener entre 4 y 6 números');
+    if (nuevo !== $('#pin-nuevo2').value.trim()) return marcarInvalido($('#pin-nuevo2'), 'Los dos PIN nuevos no coinciden');
+    try { await escribir('cambiarPin', { actual, nuevo }, { boton: e.currentTarget, ok: 'PIN cambiado' }); cerrarVentana('m-pin'); } catch {}
+  });
+  $('#pin-nuevo2').addEventListener('keydown', e => { if (e.key === 'Enter') $('#pin-ok').click(); });
+
+  // ===== Arranque (va siempre último) =====
+  // Con sesión guardada se entra directo y se valida por detrás; sin sesión, pantalla de ingreso.
+  async function arrancarApp() {
+    document.body.classList.remove('en-login');
+    $('#bnav').classList.remove('hidden');
+    // primero lo último guardado en el dispositivo (la app aparece al instante), después lo del servidor
+    let guardado = null; try { guardado = JSON.parse(localStorage.getItem('catalogo') || 'null'); } catch {}
+    if (guardado && guardado.usuario && guardado.usuario.id === sesion.id) {
+      cat = guardado; permisos = guardado.permisos || {};
+      lineaPorId = {}; basePorId = {}; personaPorId = {};
+      cat.lineas.forEach(l => { lineaPorId[l.id] = l; }); cat.bases.forEach(b => { basePorId[b.id] = b; }); cat.personal.forEach(p => { personaPorId[p.id] = p; });
+    }
+    try { await cargarCatalogo(); }
+    catch (e) {
+      if (!sesion) return;                                     // la sesión venció: ya se mostró el ingreso
+      if (!guardado) { toast(e.message, 'err'); }
+    }
+    if (!sesion) return;
+    pintarCuenta(); aplicarPermisos();
+    document.body.classList.remove('cargando');
+    const v = location.hash.slice(1);
+    mostrarVista(vistaPermitida(v) && v !== 'mas' ? v : 'inicio');
+    if (location.hash.slice(1) !== vistaActual) history.replaceState(null, '', '#' + vistaActual);
+    contarVacantesProximas();
+  }
+
+  try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch {}
+  if (sesion && sesion.token) arrancarApp();
+  else mostrarIngreso('entrar');
+
+})();
+</script>
+</body>
+</html>
