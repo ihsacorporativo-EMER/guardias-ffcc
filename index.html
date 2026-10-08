@@ -593,6 +593,35 @@
   .esquema thead th:first-child{background:var(--soft)}
   @media (max-width:640px){.esquema{min-width:560px}.esquema thead th:first-child{width:96px}}
 
+  /* ===== Personal ===== */
+  .segs-fila{display:flex;gap:6px;flex-wrap:wrap}
+  .solo-cel{display:none !important}
+  .item.persona .etiquetas .solo-pc{display:contents}
+  @media (max-width:640px){
+    /* cabecera compacta: Excel solo con el ícono y "Agregar persona" como botón redondo flotante */
+    #v-personal .cab{margin-bottom:8px;align-items:center;flex-wrap:nowrap}
+    #v-personal .lead{font-size:12px}
+    #pe-excel span,#pe-nueva span{display:none}
+    #pe-excel{width:38px;padding:0}
+    #pe-nueva{position:fixed;right:16px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:15;width:54px;height:54px;padding:0;border-radius:50%}
+    #pe-nueva svg{width:24px;height:24px}
+    #pe-lista{padding-bottom:64px}
+    /* filtros en una sola fila que se desliza */
+    #v-personal .herramientas{margin-bottom:8px}
+    #v-personal .herramientas,#v-personal .filtros{min-width:0;width:100%}
+    .segs-fila{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:1 1 100%;min-width:0;max-width:100%;padding-bottom:1px}
+    .segs-fila::-webkit-scrollbar{display:none}
+    .segs-fila .seg{flex:none;overflow:visible}
+    /* tarjeta: nombre completo arriba, tipo a la derecha, legajo y carga en renglones chicos */
+    .item.persona{align-items:flex-start;padding:9px 12px;gap:10px}
+    .item.persona .avatar{margin-top:2px}
+    .item.persona .datos > b{white-space:normal;font-size:14.5px;line-height:1.25}
+    .item.persona .datos > small{margin-top:1px}
+    .item.persona .solo-cel{display:flex !important;align-items:center;gap:6px;flex-wrap:wrap;white-space:normal;font-weight:600}
+    .item.persona .etiquetas .solo-pc{display:none}
+    .item.persona .etiquetas{flex:none;padding-top:1px}
+  }
+
 </style>
 </head>
 <body class="cargando">
@@ -654,7 +683,7 @@
         <button class="btn primario ancho" id="lc-ok" type="button">Guardar PIN y entrar</button>
         <p class="ayuda centro"><button class="link" id="lc-volver" type="button">Volver</button></p>
       </div>
-      <p class="ayuda centro login-pie">Versión 2026-10-07 d</p>
+      <p class="ayuda centro login-pie">Versión 2026-10-07 e</p>
     </div>
   </section>
 
@@ -759,17 +788,19 @@
     <div class="cab">
       <div><h1>Personal</h1><p class="lead">Médicos, enfermeros y choferes, con su legajo y contratación.</p></div>
       <div class="cab-acc">
-        <button class="btn" id="pe-excel" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>Excel</button>
-        <button class="btn primario" id="pe-nueva" type="button" data-permiso="editarPersonal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Agregar persona</button>
+        <button class="btn" id="pe-excel" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg><span>Excel</span></button>
+        <button class="btn primario" id="pe-nueva" type="button" data-permiso="editarPersonal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Agregar persona</span></button>
       </div>
     </div>
     <div class="herramientas">
       <div class="filtros">
-        <div class="seg" id="pe-tipo" role="group" aria-label="Tipo">
-          <button type="button" data-v="" aria-pressed="true">Todos</button><button type="button" data-v="Médico" aria-pressed="false">Médicos</button><button type="button" data-v="Enfermero" aria-pressed="false">Enfermeros</button><button type="button" data-v="Chofer" aria-pressed="false">Choferes</button>
-        </div>
-        <div class="seg" id="pe-estado" role="group" aria-label="Estado">
-          <button type="button" data-v="activos" aria-pressed="true">Activos</button><button type="button" data-v="baja" aria-pressed="false">De baja</button><button type="button" data-v="" aria-pressed="false">Todos</button>
+        <div class="segs-fila">
+          <div class="seg" id="pe-tipo" role="group" aria-label="Tipo">
+            <button type="button" data-v="" aria-pressed="true">Todos</button><button type="button" data-v="Médico" aria-pressed="false">Médicos</button><button type="button" data-v="Enfermero" aria-pressed="false">Enfermeros</button><button type="button" data-v="Chofer" aria-pressed="false">Choferes</button>
+          </div>
+          <div class="seg" id="pe-estado" role="group" aria-label="Estado">
+            <button type="button" data-v="activos" aria-pressed="true">Activos</button><button type="button" data-v="baja" aria-pressed="false">De baja</button><button type="button" data-v="" aria-pressed="false">Todos</button>
+          </div>
         </div>
         <input class="buscar" id="pe-buscar" type="search" placeholder="Buscar por apellido, nombre o legajo" autocomplete="off">
       </div>
@@ -834,7 +865,7 @@
     <button class="btn peligro ancho" type="button" id="mas-salir">Salir</button>
   </section>
 
-  <footer class="pie" id="pie">Coordinación de Guardias FFCC · Versión 2026-10-07 d</footer>
+  <footer class="pie" id="pie">Coordinación de Guardias FFCC · Versión 2026-10-07 e</footer>
 </main>
 
 <!-- ===== Barra de abajo (celular) ===== -->
@@ -1046,7 +1077,7 @@
   const SCRIPT_URL = window.API_URL || SCRIPT_URL_PUBLICADA;
 
   // Al publicar una versión nueva, cambiar VERSION (la fecha con una letra). Se ve en el pie y en el ingreso.
-  const VERSION = '2026-10-07 d';
+  const VERSION = '2026-10-07 e';
 
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -2009,10 +2040,13 @@
       const n = porPersona[p.id] || 0, fijos = diasFijosDe(p.id), lic = licenciaEn(p.id, hoy);
       const extra = (fijos ? `<span class="pill" title="${esc(fijasDe(p.id).map(f => `${textoDias(f.dias)} ${textoHorario(f)} · ${nombreBase(f.base)}`).join('\n'))}">↻ ${plural(fijos, 'día fijo', 'días fijos')}</span>` : '') +
         (lic ? `<span class="pill warn" title="Hasta el ${ddmm(lic.hasta)}">${esc(lic.motivo)}</span>` : '');
-      return `<div class="item ${p.activo ? '' : 'baja'} ${puede ? 'clic' : ''}" data-p="${esc(p.id)}">
+      // en celular, la carga va como un renglón de texto debajo del nombre (las etiquetas no entran al lado)
+      const carga = p.activo ? [fijos ? `↻ ${plural(fijos, 'día fijo', 'días fijos')}` : '', `${plural(n, 'guardia', 'guardias')} en 7 días`].filter(Boolean).join(' · ') : '';
+      return `<div class="item persona ${p.activo ? '' : 'baja'} ${puede ? 'clic' : ''}" data-p="${esc(p.id)}">
         <span class="avatar t-${esc(p.tipo)}">${esc(iniciales(p.apellido, p.nombre))}</span>
-        <div class="datos"><b>${esc(nombrePersona(p))}</b><small>Leg. ${esc(p.legajo)}${p.celular ? ' · ' + esc(p.celular) : ''}${p.contratacion ? ' · ' + esc(p.contratacion) : ''}</small></div>
-        <div class="etiquetas"><span class="pill t-${esc(p.tipo)}">${esc(p.tipo)}</span>${p.activo ? extra : ''}${p.activo ? `<span class="pill ${n ? 'ok' : ''}" title="Guardias asignadas en los próximos 7 días">${plural(n, 'guardia', 'guardias')} en 7 días</span>` : '<span class="pill mal">De baja</span>'}</div>
+        <div class="datos"><b>${esc(nombrePersona(p))}</b><small>Leg. ${esc(p.legajo)}${p.celular ? ' · ' + esc(p.celular) : ''}${p.contratacion ? ' · ' + esc(p.contratacion) : ''}</small>
+          <small class="solo-cel carga">${esc(carga)}${lic ? ` <span class="pill warn">${esc(lic.motivo)}</span>` : ''}${p.activo ? '' : '<span class="pill mal">De baja</span>'}</small></div>
+        <div class="etiquetas"><span class="pill t-${esc(p.tipo)}">${esc(p.tipo)}</span><span class="solo-pc">${p.activo ? extra : ''}${p.activo ? `<span class="pill ${n ? 'ok' : ''}" title="Guardias asignadas en los próximos 7 días">${plural(n, 'guardia', 'guardias')} en 7 días</span>` : '<span class="pill mal">De baja</span>'}</span></div>
       </div>`;
     }).join('') : `<div class="vacio"><b>Nadie coincide</b>${cat.personal.length ? 'Probá con otro filtro o búsqueda.' : 'Todavía no hay personal cargado.'}</div>`;
   }
